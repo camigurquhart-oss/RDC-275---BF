@@ -1,0 +1,3562 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RDC 275/2002 - Lista de Verificação BPF</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@1.0.2/dist/basecoat.cdn.min.css">
+  <style>
+/* Skip artifact shell — fixed styles served beside every artifact.
+   Complements basecoat; artifacts override --accent for their own identity. */
+:root {
+  color-scheme: light dark;
+  --accent: #2563eb;
+  --accent-contrast: #ffffff;
+  --accent-text: color-mix(in srgb, var(--accent) 72%, #000);
+  --bg: #f8f9fb;
+  --surface: #ffffff;
+  --text: #14171f;
+  --text-muted: #5b6472;
+  --border: rgba(20, 23, 31, 0.10);
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(20, 23, 31, 0.08);
+  --space: 16px;
+}
+/* Theme resolution. Without data-theme the viewer's system preference decides,
+   as it always did. With it, the artifact's own choice wins in BOTH directions:
+   a page that hardcodes one palette must not be handed the opposite set of
+   tokens by the machine it happens to be opened on. The dark values appear
+   twice because a media query cannot be folded into a selector list.
+   The attribute sits inside :where() so these blocks keep the specificity of a
+   bare :root — the page's own <style> is linked after this file and must go on
+   overriding any token it wants, exactly as it could before. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+    --bg: #101318;
+    --surface: #181c23;
+    --text: #eef1f6;
+    --text-muted: #9aa4b2;
+    --border: rgba(238, 241, 246, 0.12);
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+}
+:root:where([data-theme="dark"]) {
+  color-scheme: dark;
+  --accent-text: color-mix(in srgb, var(--accent) 78%, #fff);
+  --bg: #101318;
+  --surface: #181c23;
+  --text: #eef1f6;
+  --text-muted: #9aa4b2;
+  --border: rgba(238, 241, 246, 0.12);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+:root:where([data-theme="light"]) { color-scheme: light; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; display: block; }
+
+.shell-container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.shell-section { padding: calc(var(--space) * 2) 0; }
+.shell-grid { display: grid; gap: var(--space); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.shell-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: var(--space); }
+.shell-footer { padding: 24px 0 40px; color: var(--text-muted); font-size: 13px; }
+
+.shell-hero { padding: calc(var(--space) * 3) 0 calc(var(--space) * 2); }
+.shell-hero h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.15; margin: 0 0 10px; text-wrap: balance; }
+.shell-hero p { color: var(--text-muted); max-width: 60ch; margin: 0; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: var(--space);
+}
+
+.kpi { display: flex; flex-direction: column; gap: 4px; }
+.kpi .kpi-value { font-size: 28px; font-weight: 650; line-height: 1.1; }
+.kpi .kpi-label { font-size: 13px; color: var(--text-muted); }
+.kpi .kpi-delta { font-size: 12.5px; font-weight: 600; }
+.kpi .kpi-delta.up { color: #0a8f3c; }
+.kpi .kpi-delta.down { color: #cf3131; }
+
+table.shell-table { border-collapse: collapse; width: 100%; font-size: 14px; }
+table.shell-table th {
+  text-align: left; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 600;
+}
+table.shell-table th, table.shell-table td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--border); }
+table.shell-table td.num, table.shell-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+table.shell-table tbody tr:hover { background: color-mix(in srgb, var(--accent) 6%, transparent); }
+
+.chart-box { width: 100%; min-height: 220px; }
+.chart-box svg { width: 100%; height: auto; display: block; }
+
+.muted { color: var(--text-muted); }
+.accent { color: var(--accent-text); }
+.shell-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent-text);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shell-fade { animation: shell-fade 400ms ease both; }
+  @keyframes shell-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+}
+
+</style>
+  
+  <style>
+    :root {
+      --accent: #d99b00;
+      --accent-contrast: #1a1a1a;
+      --bg: #fff8dc;
+      --surface: #ffffff;
+      --surface-yellow: #fffdf2;
+      --border-yellow: #f2c94c;
+      --brand-yellow: #ffc107;
+      --brand-mustard: #e0a800;
+      --brand-dark: #1a1a1a;
+      --text: #1a1a1a;
+      --text-muted: #555555;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box !important;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      height: auto !important;
+      min-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto !important;
+      position: static !important;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      color: var(--brand-dark);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+      touch-action: pan-y;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--brand-dark);
+    }
+    @media (min-width: 1025px) {
+      input, select, textarea, button {
+        font-size: 15px;
+      }
+    }
+
+    /* BANNER SUPERIOR RESPONSIVO */
+    .top-banner {
+      background-color: var(--brand-yellow);
+      color: var(--brand-dark);
+      padding: 1rem 0.75rem 1.15rem;
+      text-align: center;
+      border-bottom: 2px solid #e0a800;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      width: 100%;
+    }
+    .top-banner .code-line {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 0.25rem;
+    }
+    .top-banner .title-line {
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1.3;
+      margin: 0;
+      max-width: 900px;
+      margin-inline: auto;
+      word-break: break-word;
+    }
+    .top-banner .subtitle-line {
+      font-size: 0.85rem;
+      margin-top: 0.35rem;
+      font-weight: 600;
+    }
+    @media (min-width: 481px) and (max-width: 1024px) {
+      .top-banner {
+        padding: 1.35rem 1.25rem 1.5rem;
+      }
+      .top-banner .title-line {
+        font-size: 1.35rem;
+      }
+    }
+    @media (min-width: 1025px) {
+      .top-banner {
+        padding: 28px 24px 34px;
+      }
+      .top-banner .title-line {
+        font-size: 1.7rem;
+        max-width: 1100px;
+      }
+      .top-banner .subtitle-line {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* ABAS RESPONSIVAS */
+    .tabs-bar-wrap {
+      background: #fdf2c9;
+      border-bottom: 2px solid var(--border-yellow);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      width: 100%;
+    }
+    .tabs-bar {
+      display: flex;
+      width: 100%;
+      margin: 0 auto;
+    }
+    @media (min-width: 1025px) {
+      .tabs-bar {
+        max-width: 600px;
+      }
+    }
+    .tab-btn {
+      flex: 1;
+      min-height: 48px;
+      padding: 0.85rem 0.5rem;
+      border: none;
+      background: transparent;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #554400;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn.active {
+      color: #1a1a1a;
+      background: var(--brand-yellow);
+      border-bottom-color: #b37e00;
+    }
+
+    /* CONTÊINER PRINCIPAL POR BREAKPOINT */
+    /* CELULAR (≤480px) */
+    .main-wrap {
+      width: 100%;
+      max-width: 100%;
+      height: auto !important;
+      min-height: auto !important;
+      overflow: visible !important;
+      position: static !important;
+      margin: 0 auto;
+      padding: 12px 12px 110px 12px;
+    }
+    /* TABLET (481px a 1024px) */
+    @media (min-width: 481px) and (max-width: 1024px) {
+      .main-wrap {
+        width: 100%;
+        max-width: 100%;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+        position: static !important;
+        padding: 18px 18px 110px 18px;
+      }
+    }
+    /* DESKTOP (>1024px) */
+    @media (min-width: 1025px) {
+      .main-wrap {
+        width: 100%;
+        max-width: 1280px;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+        position: static !important;
+        margin: 0 auto;
+        padding: 28px 24px 110px 24px;
+      }
+    }
+
+    /* CARDS E BLOCOS */
+    .box-yellow {
+      background: #ffffff;
+      border: 1.5px solid var(--border-yellow);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      width: 100%;
+    }
+    .collapsible-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 1rem;
+      color: var(--brand-dark);
+      user-select: none;
+    }
+    .collapsible-header .chevron {
+      transition: transform 0.2s ease;
+      font-size: 1.1rem;
+    }
+    .collapsible-header.open .chevron {
+      transform: rotate(180deg);
+    }
+    .collapsible-body {
+      margin-top: 0.85rem;
+      display: none;
+    }
+    .collapsible-body.open {
+      display: block;
+    }
+
+    /* GRADE DA EMPRESA (1 col no celular, 2 no tablet, 3 no desktop) */
+    .empresa-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+      margin-top: 0.65rem;
+      width: 100%;
+    }
+    @media (min-width: 481px) and (max-width: 1024px) {
+      .empresa-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+      .empresa-grid .col-full {
+        grid-column: 1 / -1;
+      }
+    }
+    @media (min-width: 1025px) {
+      .empresa-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.85rem;
+      }
+      .empresa-grid .col-full {
+        grid-column: 1 / -1;
+      }
+      .empresa-grid .col-span-2 {
+        grid-column: span 2;
+      }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      width: 100%;
+      min-width: 0;
+    }
+    .field-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #333333;
+    }
+    .field-input, .field-select, .field-textarea {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      padding: 0.6rem 0.65rem;
+      border: 1.5px solid #d4c28d;
+      border-radius: 6px;
+      background: #ffffff;
+      color: var(--brand-dark);
+      outline: none;
+    }
+    .field-input:focus, .field-select:focus, .field-textarea:focus {
+      border-color: #b37e00;
+      box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.4);
+    }
+
+    /* TOP CONTROLS */
+    .top-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      background: #fffdf2;
+      border: 2px solid var(--border-yellow);
+      border-radius: 8px;
+      padding: 0.85rem;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+    .top-controls-dates {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+      width: 100%;
+    }
+    @media (min-width: 481px) {
+      .top-controls-dates {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+    }
+    @media (min-width: 1025px) {
+      .top-controls {
+        padding: 1.15rem;
+        gap: 0.85rem;
+      }
+    }
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.65rem;
+      padding-top: 0.5rem;
+      border-top: 1px dashed #e6c86e;
+    }
+    .progress-pill {
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 0.4rem 0.85rem;
+      background: #fdf0ba;
+      border: 1px solid #e0c25a;
+      border-radius: 999px;
+      color: #4a3800;
+      text-align: center;
+    }
+    @media (min-width: 1025px) {
+      .progress-pill {
+        font-size: 0.95rem;
+        padding: 0.5rem 1.25rem;
+      }
+    }
+
+    /* SECTION BLOCK & GRADE DE ITENS */
+    .section-block {
+      margin-bottom: 1.25rem;
+      width: 100%;
+    }
+    .section-banner {
+      background: var(--brand-yellow);
+      color: #1a1a1a;
+      padding: 0.75rem 0.9rem;
+      font-size: 1rem;
+      font-weight: 800;
+      border-radius: 6px 6px 0 0;
+      border: 1.5px solid #d4a000;
+      border-bottom: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-counter {
+      font-size: 0.8rem;
+      background: rgba(0,0,0,0.1);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .section-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      background: #fff9e6;
+      border: 1.5px solid #d4a000;
+      border-top: none;
+      border-bottom: none;
+      padding: 0.75rem;
+      border-radius: 0;
+      width: 100%;
+    }
+    /* TABLET: 2 COLUNAS */
+    @media (min-width: 481px) and (max-width: 1024px) {
+      .section-items {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        align-items: start;
+        gap: 0.75rem;
+        padding: 0.85rem;
+      }
+    }
+    /* DESKTOP: 3 COLUNAS */
+    @media (min-width: 1025px) {
+      .section-items {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        align-items: start;
+        gap: 0.95rem;
+        padding: 1rem;
+      }
+    }
+
+    /* ITEM CARD */
+    .item-card {
+      background: #ffffff;
+      border: 1.5px solid #eed88d;
+      border-radius: 6px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      min-width: 0;
+      width: 100%;
+      position: relative;
+    }
+    .item-card.state-na {
+      border-color: #d1b854;
+      background: #faf7eb;
+    }
+    .item-card.state-nao {
+      border-color: #c98800;
+      background: #fff6e0;
+    }
+    .item-card.state-sim {
+      border-color: #79a83b;
+      background: #fcfdf7;
+    }
+
+    .item-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+      width: 100%;
+    }
+    .item-header {
+      display: flex;
+      gap: 0.5rem;
+      align-items: baseline;
+      min-width: 0;
+      flex: 1;
+    }
+    .item-code {
+      font-weight: 800;
+      font-size: 0.88rem;
+      color: #6d4c00;
+      background: #fff1b8;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .item-text {
+      font-size: 0.9rem;
+      line-height: 1.35;
+      color: var(--brand-dark);
+      flex: 1;
+      min-width: 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    /* CARD ACTION BUTTONS (EDITAR / EXCLUIR) */
+    .item-card-actions {
+      display: flex;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .btn-card-action {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+      border-radius: 6px;
+      border: 1.5px solid #d4c28d;
+      background: #fffdf5;
+      color: #333333;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0;
+      line-height: 1;
+      transition: all 0.12s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-card-action:hover {
+      background: #fffae6;
+      border-color: #b37e00;
+    }
+    .btn-card-action:active {
+      transform: scale(0.95);
+    }
+    .btn-del-item:hover, .btn-del-item:active {
+      background: #ffebe6;
+      border-color: #cc3300;
+      color: #cc3300;
+    }
+
+    /* MODO EDIÇÃO DO CARD */
+    .item-edit-mode {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      padding: 0.6rem;
+      background: #fffdf2;
+      border: 1.5px dashed #b37e00;
+      border-radius: 6px;
+      margin-bottom: 0.25rem;
+      width: 100%;
+    }
+    .item-edit-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.35rem;
+    }
+    .btn-edit-save {
+      flex: 1;
+      min-height: 40px;
+      background: #1a1a1a;
+      color: #ffc107;
+      border: 1.5px solid #1a1a1a;
+      font-weight: 800;
+      font-size: 0.88rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+    .btn-edit-cancel {
+      flex: 1;
+      min-height: 40px;
+      background: #ffffff;
+      color: #555555;
+      border: 1.5px solid #cccccc;
+      font-weight: 700;
+      font-size: 0.88rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    /* BOTÃO GRANDE ADICIONAR ITEM POR BLOCO */
+    .btn-add-item {
+      width: 100%;
+      min-height: 48px;
+      background: var(--brand-yellow);
+      color: #1a1a1a;
+      border: 1.5px solid #d4a000;
+      border-top: 1px dashed #d4a000;
+      border-radius: 0 0 6px 6px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.75rem 1rem;
+      transition: all 0.15s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .btn-add-item:hover {
+      background: #ffb800;
+    }
+    .btn-add-item:active {
+      background: #e0a800;
+      transform: scale(0.99);
+    }
+
+    /* BOTÃO DISCRETO RESTAURAR ORIGINAL */
+    .btn-restore-discreet {
+      background: transparent;
+      border: 1px dashed #b37e00;
+      color: #7a5c00;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: all 0.15s ease;
+      width: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+    .btn-restore-discreet:hover {
+      background: #fff2c4;
+      color: #1a1a1a;
+      border-color: #7a5c00;
+    }
+
+    /* TRI-STATE BUTTONS (Sempre 3 botões em linha) */
+    .item-buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+      margin-top: 0.25rem;
+      width: 100%;
+    }
+    .state-btn {
+      flex: 1;
+      min-width: 0;
+      min-height: 48px;
+      padding: 0.65rem 0.25rem;
+      border-radius: 6px;
+      border: 1.5px solid #d9c585;
+      background: #fffdf5;
+      font-weight: 800;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      transition: all 0.1s ease;
+      color: #4f4215;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .state-btn:active {
+      transform: scale(0.98);
+    }
+    .state-btn.btn-sim.active {
+      background: #ffc107;
+      border-color: #c98800;
+      color: #1a1a1a;
+      box-shadow: inset 0 0 0 1px #9c6800;
+    }
+    .state-btn.btn-nao.active {
+      background: #e0a800;
+      border-color: #9c6800;
+      color: #1a1a1a;
+      box-shadow: inset 0 0 0 1px #664400;
+    }
+    .state-btn.btn-na.active {
+      background: #f4d36f;
+      border-color: #c29d2b;
+      color: #2b2203;
+      box-shadow: inset 0 0 0 1px #8f7215;
+    }
+    @media (min-width: 1025px) {
+      .state-btn {
+        min-height: 52px;
+        font-size: 0.95rem;
+      }
+    }
+
+    /* NC SUBPANEL */
+    .nc-panel {
+      display: none;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 0.4rem;
+      padding: 0.65rem;
+      background: #fff3cd;
+      border: 1.5px dashed #d39e00;
+      border-radius: 6px;
+      width: 100%;
+    }
+    .nc-panel.open {
+      display: flex;
+    }
+    .nc-dates-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    /* FOTO NATIVA E NC PANEL */
+    .btn-foto {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 48px;
+      padding: 0.75rem 1rem;
+      background: var(--brand-yellow);
+      border: 2px solid #b37e00;
+      border-radius: 6px;
+      color: #1a1a1a;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-align: center;
+      position: relative;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+    .btn-foto:active {
+      background: #e0a800;
+      transform: scale(0.99);
+    }
+    .native-file-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
+      margin: -1px;
+      padding: 0;
+    }
+    .photo-preview-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background: #fffdf5;
+      border: 1px solid #e0c25a;
+      border-radius: 6px;
+      width: 100%;
+    }
+    .photo-thumb {
+      width: auto;
+      max-width: 140px;
+      height: auto;
+      max-height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 2px solid #b37e00;
+      cursor: pointer;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    @media (min-width: 1025px) {
+      .photo-thumb {
+        max-width: 200px;
+        max-height: 150px;
+      }
+    }
+    .photo-preview-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+      min-width: 130px;
+    }
+    .btn-remove-photo {
+      background: #ffffff;
+      border: 1.5px solid #cc3300;
+      color: #cc3300;
+      font-weight: 700;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      width: 100%;
+    }
+    .btn-remove-photo:active {
+      background: #ffebe6;
+    }
+
+    /* BARRA INFERIOR FIXA */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ffc107;
+      border-top: 2px solid #b37e00;
+      padding: 0.65rem 0.85rem;
+      z-index: 50;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.12);
+      width: 100%;
+    }
+    .bottom-bar-inner {
+      display: flex;
+      gap: 0.65rem;
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .btn-save-day {
+      flex: 2;
+      min-height: 48px;
+      background: #1a1a1a;
+      color: #ffc107;
+      border: none;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .btn-save-day:active {
+      transform: scale(0.98);
+    }
+    .btn-clear-day {
+      flex: 1;
+      min-height: 48px;
+      background: #e0a800;
+      color: #1a1a1a;
+      border: 1.5px solid #9c6800;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.85rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* RODAPÉ DO DOCUMENTO */
+    .doc-footer {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      background: #ffffff;
+      border: 1.5px solid var(--border-yellow);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      width: 100%;
+    }
+    .doc-footer .field-label {
+      color: #6d4c00;
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+    }
+    .doc-footer .field-input {
+      background: #fffdf5;
+      border: 1.5px solid var(--border-yellow);
+      font-size: 16px;
+      width: 100%;
+    }
+    .doc-footer .field-input:focus {
+      border-color: #b37e00;
+      box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.4);
+    }
+    .sig-line {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #222;
+      border-bottom: 1px dotted #888;
+      padding-bottom: 0.4rem;
+      word-break: break-word;
+    }
+    .sig-note {
+      font-size: 0.85rem;
+      color: #444;
+      padding-bottom: 0.2rem;
+    }
+
+    /* ABA REGISTROS */
+    .record-card {
+      background: #ffffff;
+      border: 1.5px solid var(--border-yellow);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      width: 100%;
+    }
+    .record-card:hover {
+      background: #fffdf5;
+    }
+    .record-title {
+      font-weight: 800;
+      font-size: 1rem;
+      color: #1a1a1a;
+    }
+    .record-sub {
+      font-size: 0.82rem;
+      color: #555555;
+      margin-top: 0.2rem;
+    }
+    .badge-pct {
+      background: var(--brand-yellow);
+      color: #1a1a1a;
+      font-weight: 800;
+      font-size: 0.95rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #b37e00;
+      white-space: nowrap;
+    }
+    .btn-icon-del {
+      background: transparent;
+      border: 1px solid #cc4444;
+      color: #cc4444;
+      border-radius: 4px;
+      padding: 0.4rem 0.6rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: 700;
+      width: auto;
+    }
+
+    /* ABA RELATÓRIO */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+    @media (min-width: 600px) and (max-width: 1024px) {
+      .kpi-row {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (min-width: 1025px) {
+      .kpi-row {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 0.85rem;
+      }
+    }
+    .kpi-box {
+      background: #ffffff;
+      border: 1.5px solid var(--border-yellow);
+      border-radius: 8px;
+      padding: 0.75rem;
+      text-align: center;
+      min-width: 0;
+    }
+    .kpi-val {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #1a1a1a;
+    }
+    .kpi-lbl {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #666666;
+      margin-top: 0.15rem;
+    }
+
+    .classification-banner {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 2px solid #b37e00;
+      background: #fff3cd;
+      text-align: center;
+      width: 100%;
+    }
+    .classification-banner.grupo1 {
+      background: #d4edda;
+      border-color: #28a745;
+      color: #155724;
+    }
+    .classification-banner.grupo2 {
+      background: #fff3cd;
+      border-color: #ffc107;
+      color: #856404;
+    }
+    .classification-banner.grupo3 {
+      background: #f8d7da;
+      border-color: #dc3545;
+      color: #721c24;
+    }
+    .classification-banner h3 {
+      margin: 0 0 0.35rem;
+      font-size: 1.15rem;
+      font-weight: 800;
+    }
+
+    .block-bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+      width: 100%;
+    }
+    .block-bar-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .block-bar-track {
+      background: #eee;
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+      border: 1px solid #d4c28d;
+      width: 100%;
+    }
+    .block-bar-fill {
+      background: var(--brand-yellow);
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* TABELA DE AÇÃO */
+    .table-resp {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border: 1.5px solid var(--border-yellow);
+      border-radius: 8px;
+      background: #ffffff;
+      margin-bottom: 1rem;
+    }
+    .nc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      min-width: 650px;
+    }
+    .nc-table th {
+      background: var(--brand-yellow);
+      color: #1a1a1a;
+      padding: 0.6rem 0.5rem;
+      text-align: left;
+      font-weight: 800;
+      border-bottom: 2px solid #b37e00;
+    }
+    .nc-table td {
+      padding: 0.55rem 0.5rem;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+    .nc-table tr:nth-child(even) {
+      background: #fffdf5;
+    }
+
+    .action-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 0.75rem;
+      width: 100%;
+    }
+    .btn-action {
+      flex: 1;
+      min-width: 160px;
+      min-height: 48px;
+      padding: 0.75rem 1rem;
+      font-weight: 800;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      border: 1.5px solid #9c6800;
+      background: var(--brand-yellow);
+      color: #1a1a1a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-action.btn-dark {
+      background: #1a1a1a;
+      color: #ffc107;
+      border-color: #1a1a1a;
+    }
+
+    /* FILTROS DO RELATÓRIO */
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.65rem;
+      width: 100%;
+    }
+    @media (min-width: 481px) {
+      .filter-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* MODAL DE FOTO */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .modal-img {
+      max-width: 95vw;
+      max-height: 85vh;
+      border-radius: 6px;
+      border: 3px solid #ffc107;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    }
+
+    /* PRINT */
+    @media print {
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .top-banner, .tabs-bar-wrap, .bottom-bar, .action-btns, .top-actions, .filter-row, .btn-icon-del, .item-card-actions, .btn-add-item, .btn-restore-discreet, .item-edit-mode {
+        display: none !important;
+      }
+      .main-wrap {
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+      .tab-content {
+        display: none !important;
+      }
+      #tab-relatorio {
+        display: block !important;
+      }
+      .box-yellow, .table-resp {
+        border-color: #999 !important;
+      }
+      .nc-table th {
+        background: #e5e5e5 !important;
+        color: #000 !important;
+        border-bottom: 1px solid #000 !important;
+      }
+      .nc-photo-print {
+        width: 120px !important;
+        height: 120px !important;
+        max-width: 120px !important;
+        max-height: 120px !important;
+        object-fit: cover !important;
+        display: block !important;
+        margin: 0 auto !important;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 1cm;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BANNER SUPERIOR -->
+  <header class="top-banner">
+    <div class="code-line">RDC Nº 275/2002 - ANEXO II</div>
+    <h1 class="title-line">Lista de Verificação das Boas Práticas de Fabricação em Estabelecimentos Produtores/Industrializadores de Alimentos</h1>
+    <div class="subtitle-line">Da Vó Atelier de Cucas — Sistema 100% Offline</div>
+  </header>
+
+  <!-- ABAS -->
+  <nav class="tabs-bar-wrap">
+    <div class="tabs-bar">
+      <button class="tab-btn active" data-tab="preencher" id="tabBtnPreencher">
+        <span>📝</span> Preencher
+      </button>
+      <button class="tab-btn" data-tab="registros" id="tabBtnRegistros">
+        <span>📂</span> Registros <span id="badgeRegCount" style="font-size:0.75rem; background:#fff; padding:0.1rem 0.4rem; border-radius:10px; margin-left:2px;">0</span>
+      </button>
+      <button class="tab-btn" data-tab="relatorio" id="tabBtnRelatorio">
+        <span>📊</span> Relatório
+      </button>
+    </div>
+  </nav>
+
+  <main class="main-wrap">
+
+    <!-- ===================== ABA 1: PREENCHER ===================== -->
+    <section id="tab-preencher" class="tab-content">
+
+      <!-- IDENTIFICAÇÃO DA EMPRESA (Recolhível) -->
+      <div class="box-yellow">
+        <div class="collapsible-header open" id="btnToggleEmpresa">
+          <span>🏢 IDENTIFICAÇÃO DA EMPRESA</span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="collapsible-body open" id="bodyEmpresa">
+          <div class="empresa-grid">
+            <div class="field-group col-span-2">
+              <label class="field-label">RAZÃO SOCIAL</label>
+              <input type="text" id="empRazao" class="field-input" value="Da Vó Atelier de Cucas Ltda">
+            </div>
+            <div class="field-group">
+              <label class="field-label">NOME DE FANTASIA</label>
+              <input type="text" id="empFantasia" class="field-input" value="Da Vó Atelier de Cucas">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">CNPJ / CPF</label>
+              <input type="text" id="empCnpj" class="field-input" value="00.000.000/0001-00">
+            </div>
+            <div class="field-group col-span-2">
+              <label class="field-label">RAMO DE ATIVIDADE</label>
+              <input type="text" id="empRamo" class="field-input" value="Fabricação de Produtos de Panificação e Confeitaria">
+            </div>
+
+            <div class="field-group col-span-2">
+              <label class="field-label">ENDEREÇO (RUA/AV.)</label>
+              <input type="text" id="empRua" class="field-input" value="Rua das Cucas Artesanais">
+            </div>
+            <div class="field-group">
+              <label class="field-label">CEP</label>
+              <input type="text" id="empCep" class="field-input" value="90000-000">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">NÚMERO</label>
+              <input type="text" id="empNum" class="field-input" value="123">
+            </div>
+            <div class="field-group">
+              <label class="field-label">COMPLEMENTO</label>
+              <input type="text" id="empCompl" class="field-input" value="Sala 1">
+            </div>
+            <div class="field-group">
+              <label class="field-label">BAIRRO</label>
+              <input type="text" id="empBairro" class="field-input" value="Centro">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">MUNICÍPIO</label>
+              <input type="text" id="empMunicipio" class="field-input" value="Porto Alegre">
+            </div>
+            <div class="field-group">
+              <label class="field-label">UF</label>
+              <input type="text" id="empUf" class="field-input" value="RS">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Nº DE FUNCIONÁRIOS</label>
+              <input type="number" id="empNumFunc" class="field-input" value="8">
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Nº DE TURNOS</label>
+              <input type="number" id="empNumTurnos" class="field-input" value="1">
+            </div>
+            <div class="field-group col-span-2">
+              <label class="field-label">RESPONSÁVEL LEGAL / PROPRIETÁRIO</label>
+              <input type="text" id="empRespLegal" class="field-input" value="Diretoria">
+            </div>
+
+            <div class="field-group col-span-2">
+              <label class="field-label">RESPONSÁVEL TÉCNICO</label>
+              <input type="text" id="empRespTecnico" class="field-input" value="Nutricionista RT">
+            </div>
+            <div class="field-group">
+              <label class="field-label">FORMAÇÃO ACADÊMICA</label>
+              <input type="text" id="empFormacao" class="field-input" value="Nutrição / CRN">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DATA E RESPONSÁVEL DA INSPEÇÃO -->
+      <div class="top-controls">
+        <div class="top-controls-dates">
+          <div class="field-group">
+            <label class="field-label">DATA DA INSPEÇÃO</label>
+            <input type="date" id="inspDate" class="field-input" required>
+          </div>
+          <div class="field-group">
+            <label class="field-label">RESPONSÁVEL PELA INSPEÇÃO</label>
+            <input type="text" id="inspResp" class="field-input" placeholder="Seu nome completo" required>
+          </div>
+        </div>
+
+        <div class="top-actions">
+          <button type="button" class="btn-action" id="btnMarcarTodosSim" style="flex:0 0 auto; width:auto; padding:0.5rem 0.85rem; font-size:0.85rem;">
+            ✓ Marcar todos SIM
+          </button>
+          <div class="progress-pill" id="progressPill">0 de 164 respondidos</div>
+        </div>
+      </div>
+
+      <!-- CONTÊINER DOS 5 BLOCOS -->
+      <div id="checklistContainer"></div>
+
+      <!-- OBSERVAÇÕES E CONSIDERAÇÕES FINAIS -->
+      <div class="box-yellow" style="margin-top:1.25rem;">
+        <label class="field-label" style="font-size:0.95rem; margin-bottom:0.4rem; display:block;">
+          OBSERVAÇÕES E CONSIDERAÇÕES FINAIS
+        </label>
+        <textarea id="obsGerais" class="field-textarea" rows="4" placeholder="Insira considerações finais, pendências gerais ou recomendações de inspeção..."></textarea>
+      </div>
+
+      <!-- BOTÃO DISCRETO RESTAURAR ORIGINAL -->
+      <div style="text-align:center; margin: 1.25rem 0 0.5rem;">
+        <button type="button" id="btnRestaurarOriginal" class="btn-restore-discreet" title="Restaurar a lista original de 164 itens da RDC 275/2002">
+          ↺ RESTAURAR ORIGINAL
+        </button>
+      </div>
+
+      <!-- RODAPÉ DA FOLHA COM CAMPOS PREENCHÍVEIS -->
+      <footer class="doc-footer">
+        <div class="field-group">
+          <label class="field-label" for="docElaboradoPor">ELABORADO POR</label>
+          <input type="text" id="docElaboradoPor" class="field-input" placeholder="Digite o nome de quem elaborou">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="docAprovadoPor">APROVADO POR</label>
+          <input type="text" id="docAprovadoPor" class="field-input" placeholder="Digite o nome de quem aprovou">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="docPrazoAdequacao">PRAZO DE ADEQUAÇÃO</label>
+          <input type="text" id="docPrazoAdequacao" class="field-input" value="Imediato para os itens da lista (RDC 275/2002).">
+        </div>
+      </footer>
+
+      <!-- BARRA FIXA -->
+      <div class="bottom-bar">
+        <div class="bottom-bar-inner">
+          <button type="button" class="btn-clear-day" id="btnClearDay">Limpar Dia</button>
+          <button type="button" class="btn-save-day" id="btnSaveDay">💾 SALVAR DIA</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================== ABA 2: REGISTROS ===================== -->
+    <section id="tab-registros" class="tab-content" style="display:none;">
+      <div class="box-yellow">
+        <h2 style="margin:0 0 0.5rem; font-size:1.1rem; font-weight:800;">DIAS REGISTRADOS</h2>
+        <p style="margin:0 0 1rem; font-size:0.85rem; color:#555;">
+          Toque em qualquer inspeção para revisar, editar ou atualizar as não conformidades. Todos os dados permanecem salvos no dispositivo.
+        </p>
+        <div id="listaRegistros">
+          <!-- Renderizado via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ABA 3: RELATÓRIO ===================== -->
+    <section id="tab-relatorio" class="tab-content" style="display:none;">
+      
+      <!-- FILTRO DE PERÍODO -->
+      <div class="box-yellow filter-row">
+        <div class="filter-grid">
+          <div class="field-group">
+            <label class="field-label">PERÍODO DE</label>
+            <input type="date" id="relDe" class="field-input">
+          </div>
+          <div class="field-group">
+            <label class="field-label">PERÍODO ATÉ</label>
+            <input type="date" id="relAte" class="field-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- BANNER DE CLASSIFICAÇÃO RDC 275 -->
+      <div id="classificacaoCard" class="classification-banner grupo1">
+        <h3 id="classifTitulo">CLASSIFICAÇÃO DO ESTABELECIMENTO</h3>
+        <div id="classifTexto" style="font-weight:700; font-size:0.95rem;">GRUPO 1 - 76 a 100% de atendimento dos itens</div>
+        <div id="classifSub" style="font-size:0.82rem; margin-top:0.25rem; opacity:0.85;">Conforme critérios oficiais da RDC nº 275/2002</div>
+      </div>
+
+      <!-- KPIS GERAIS -->
+      <div class="kpi-row">
+        <div class="kpi-box">
+          <div class="kpi-val" id="kpiDias">0</div>
+          <div class="kpi-lbl">Dias Avaliados</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val" id="kpiTotalItens">0</div>
+          <div class="kpi-lbl">Verificações</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val" style="color:#2e7d32;" id="kpiConformes">0</div>
+          <div class="kpi-lbl">Conformes (SIM)</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val" style="color:#c62828;" id="kpiNaoConformes">0</div>
+          <div class="kpi-lbl">Não Conformes (NÃO)</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val" style="color:#555;" id="kpiNA">0</div>
+          <div class="kpi-lbl">Não se Aplica</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val" style="color:#b37e00;" id="kpiTaxa">0%</div>
+          <div class="kpi-lbl">Taxa de Conformidade</div>
+        </div>
+      </div>
+
+      <!-- DESEMPENHO POR BLOCO -->
+      <div class="box-yellow">
+        <h3 style="margin:0 0 0.85rem; font-size:1rem; font-weight:800;">CONFORMIDADE POR BLOCO TEMÁTICO</h3>
+        <div id="barrasPorBloco"></div>
+      </div>
+
+      <!-- PLANO DE AÇÃO / LISTA CONSOLIDADA DE NÃO CONFORMIDADES -->
+      <div class="box-yellow">
+        <h3 style="margin:0 0 0.4rem; font-size:1rem; font-weight:800;">PLANO DE AÇÃO - NÃO CONFORMIDADES REGISTRADAS</h3>
+        <p style="margin:0 0 0.75rem; font-size:0.8rem; color:#555;">
+          Lista de irregularidades apontadas no período com ações corretivas, prazos e comprovação fotográfica.
+        </p>
+
+        <div class="table-resp">
+          <table class="nc-table" id="tabelaNC">
+            <thead>
+              <tr>
+                <th style="width:90px;">Data</th>
+                <th style="width:70px;">Item</th>
+                <th>Irregularidade / Requisito</th>
+                <th>Descrição da Não Conformidade</th>
+                <th>Ação Corretiva</th>
+                <th>Resp. / Prazo</th>
+                <th style="width:65px; text-align:center;">Foto</th>
+              </tr>
+            </thead>
+            <tbody id="corpoTabelaNC">
+              <!-- Renderizado via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="action-btns">
+          <button type="button" class="btn-action" id="btnImprimirPdf">🖨️ IMPRIMIR / SALVAR PDF</button>
+          <button type="button" class="btn-action btn-dark" id="btnExportarCsv">📥 EXPORTAR CSV</button>
+        </div>
+      </div>
+
+      <!-- CONSIDERAÇÕES FINAIS NO RELATÓRIO -->
+      <div class="box-yellow">
+        <h3 style="margin:0 0 0.5rem; font-size:1rem; font-weight:800;">CONSIDERAÇÕES FINAIS DO PERÍODO</h3>
+        <div id="relatorioObsConsolidadas" style="font-size:0.88rem; line-height:1.4; color:#333; white-space:pre-wrap;">Nenhuma consideração adicional registrada.</div>
+      </div>
+
+      <!-- RODAPÉ RELATÓRIO -->
+      <footer class="doc-footer" id="relatorioFooter">
+        <div class="sig-line"><strong>Elaborado por:</strong> <span id="relValElaborado">________________________________</span></div>
+        <div class="sig-line"><strong>Aprovado por:</strong> <span id="relValAprovado">________________________________</span></div>
+        <div class="sig-note"><strong>Prazo de Adequação:</strong> <span id="relValPrazo">Imediato para os itens da lista (RDC 275/2002).</span></div>
+      </footer>
+
+    </section>
+
+  </main>
+
+  <!-- MODAL PARA AMPLIAR FOTO -->
+  <div class="modal-backdrop" id="imgModal" onclick="this.classList.remove('open')">
+    <img id="imgModalSrc" class="modal-img" src="" alt="Ampliação da Foto">
+  </div>
+
+  <!-- SCRIPT COMPLETO INTEGRAL -->
+  <script>
+    // BASE DE DADOS DOS ITENS OFICIAIS RDC 275/2002 ANEXO II
+    const CHECKLIST_DATA = [
+      {
+        blocoId: 1,
+        blocoTitulo: "1. EDIFICAÇÃO E INSTALAÇÕES",
+        itens: [
+          { id: "1.1.1", text: "Área externa livre de focos de insalubridade, de objetos em desuso ou estranhos ao ambiente, de vetores e outros animais no pátio e vizinhança; de focos de poeira; de acúmulo de lixo nas imediações, de água estagnada, dentre outros." },
+          { id: "1.1.2", text: "Vias de acesso interno com superfície dura ou pavimentada, adequada ao trânsito sobre rodas, escoamento adequado e limpas." },
+          { id: "1.2.1", text: "Acesso direto, não comum a outros usos (habitação)." },
+          { id: "1.3.1", text: "Área interna livre de objetos em desuso ou estranhos ao ambiente." },
+          { id: "1.4.1", text: "Piso: material que permite fácil e apropriada higienização (liso, resistente, drenado com declive, impermeável e outros)." },
+          { id: "1.4.2", text: "Piso em adequado estado de conservação (livre de defeitos, rachaduras, trincas, buracos e outros)." },
+          { id: "1.4.3", text: "Sistema de drenagem dimensionado adequadamente, sem acúmulo de resíduos. Drenos, ralos sifonados e grelhas colocados em locais adequados de forma a facilitar o escoamento e proteger contra a entrada de baratas, roedores etc." },
+          { id: "1.5.1", text: "Teto: acabamento liso, em cor clara, impermeável, de fácil limpeza e, quando for o caso, desinfecção." },
+          { id: "1.5.2", text: "Teto em adequado estado de conservação (livre de trincas, rachaduras, umidade, bolor, descascamentos e outros)." },
+          { id: "1.6.1", text: "Paredes e divisórias: acabamento liso, impermeável e de fácil higienização até uma altura adequada para todas as operações. De cor clara." },
+          { id: "1.6.2", text: "Paredes em adequado estado de conservação (livres de falhas, rachaduras, umidade, descascamento e outros)." },
+          { id: "1.6.3", text: "Existência de ângulos abaulados entre as paredes e o piso e entre as paredes e o teto." },
+          { id: "1.7.1", text: "Portas: com superfície lisa, de fácil higienização, ajustadas aos batentes, sem falhas de revestimento." },
+          { id: "1.7.2", text: "Portas externas com fechamento automático (mola, sistema eletrônico ou outro) e com barreiras adequadas para impedir entrada de vetores e outros animais (telas milimétricas ou outro sistema)." },
+          { id: "1.7.3", text: "Portas em adequado estado de conservação (livres de falhas, rachaduras, umidade, descascamento e outros)." },
+          { id: "1.8.1", text: "Janelas e outras aberturas: com superfície lisa, de fácil higienização, ajustadas aos batentes, sem falhas de revestimento." },
+          { id: "1.8.2", text: "Existência de proteção contra insetos e roedores (telas milimétricas ou outro sistema)." },
+          { id: "1.8.3", text: "Janelas em adequado estado de conservação (livres de falhas, rachaduras, umidade, descascamento e outros)." },
+          { id: "1.9.1", text: "Escadas, elevadores de serviço, montacargas e estruturas auxiliares: construídos, localizados e utilizados de forma a não serem fontes de contaminação." },
+          { id: "1.9.2", text: "De material apropriado, resistente, liso e impermeável, em adequado estado de conservação." },
+          { id: "1.10.1", text: "Instalações sanitárias e vestiários para os manipuladores: quando localizados isolados da área de produção, acesso realizado por passagens cobertas e calçadas." },
+          { id: "1.10.2", text: "Independentes para cada sexo (conforme legislação específica), identificados e de uso exclusivo para manipuladores de alimentos." },
+          { id: "1.10.3", text: "Instalações sanitárias com vasos sanitários; mictórios e lavatórios íntegros e em proporção adequada ao número de empregados (conforme legislação específica)." },
+          { id: "1.10.4", text: "Instalações sanitárias servidas de água corrente, dotadas preferencialmente de torneira com acionamento automático e conectadas à rede de esgoto ou fossa séptica." },
+          { id: "1.10.5", text: "Ausência de comunicação direta (incluindo sistema de exaustão) com a área de trabalho e de refeições." },
+          { id: "1.10.6", text: "Portas com fechamento automático (mola, sistema eletrônico ou outro)." },
+          { id: "1.10.7", text: "Pisos e paredes adequadas e apresentando satisfatório estado de conservação." },
+          { id: "1.10.8", text: "Iluminação e ventilação adequadas." },
+          { id: "1.10.9", text: "Instalações sanitárias dotadas de produtos destinados à higiene pessoal: papel higiênico, sabonete líquido inodoro anti-séptico ou sabonete líquido inodoro e anti-séptico, toalhas de papel não reciclado para as mãos ou outro sistema higiênico e seguro para secagem." },
+          { id: "1.10.10", text: "Presença de lixeiras com tampas e com acionamento não manual." },
+          { id: "1.10.11", text: "Coleta freqüente do lixo." },
+          { id: "1.10.12", text: "Presença de avisos com os procedimentos para lavagem das mãos." },
+          { id: "1.10.13", text: "Vestiários com área compatível e armários individuais para todos os manipuladores." },
+          { id: "1.10.14", text: "Duchas ou chuveiros em número suficiente (conforme legislação específica), com água fria ou com água quente e fria." },
+          { id: "1.10.15", text: "Apresentam-se organizados e em adequado estado de conservação." },
+          { id: "1.11.1", text: "Instalações sanitárias para visitantes e outros: instaladas totalmente independentes da área de produção e higienizados." },
+          { id: "1.12.1", text: "Lavatórios na área de produção: existência de lavatórios na área de manipulação com água corrente, dotados preferencialmente de torneira com acionamento automático, em posições adequadas em relação ao fluxo de produção e serviço, e em número suficiente de modo a atender toda a área de produção." },
+          { id: "1.12.2", text: "Lavatórios em condições de higiene, dotados de sabonete líquido inodoro anti-séptico ou sabonete líquido inodoro e anti-séptico, toalhas de papel não reciclado ou outro sistema higiênico e seguro de secagem e coletor de papel acionados sem contato manual." },
+          { id: "1.13.1", text: "Iluminação e instalação elétrica: natural ou artificial adequada à atividade desenvolvida, sem ofuscamento, reflexos fortes, sombras e contrastes excessivos." },
+          { id: "1.13.2", text: "Luminárias com proteção adequada contra quebras e em adequado estado de conservação." },
+          { id: "1.13.3", text: "Instalações elétricas embutidas ou quando exteriores revestidas por tubulações isolantes e presas a paredes e tetos." },
+          { id: "1.14.1", text: "Ventilação e climatização: ventilação e circulação de ar capazes de garantir o conforto térmico e o ambiente livre de fungos, gases, fumaça, pós, partículas em suspensão e condensação de vapores sem causar danos à produção." },
+          { id: "1.14.2", text: "Ventilação artificial por meio de equipamento(s) higienizado(s) e com manutenção adequada ao tipo de equipamento." },
+          { id: "1.14.3", text: "Ambientes climatizados artificialmente com filtros adequados." },
+          { id: "1.14.4", text: "Existência de registro periódico dos procedimentos de limpeza e manutenção dos componentes do sistema de climatização (conforme legislação específica) afixado em local visível." },
+          { id: "1.14.5", text: "Sistema de exaustão e ou insuflamento com troca de ar capaz de prevenir contaminações." },
+          { id: "1.14.6", text: "Sistema de exaustão e ou insuflamento dotados de filtros adequados." },
+          { id: "1.14.7", text: "Captação e direção da corrente de ar não seguem a direção da área contaminada para área limpa." },
+          { id: "1.15.1", text: "Higienização das instalações: existência de um responsável pela operação de higienização comprovadamente capacitado." },
+          { id: "1.15.2", text: "Freqüência de higienização das instalações adequada." },
+          { id: "1.15.3", text: "Existência de registro da higienização." },
+          { id: "1.15.4", text: "Produtos de higienização regularizados pelo Ministério da Saúde." },
+          { id: "1.15.5", text: "Disponibilidade dos produtos de higienização necessários à realização da operação." },
+          { id: "1.15.6", text: "A diluição dos produtos de higienização, tempo de contato e modo de uso/aplicação obedecem às instruções recomendadas pelo fabricante." },
+          { id: "1.15.7", text: "Produtos de higienização identificados e guardados em local adequado." },
+          { id: "1.15.8", text: "Disponibilidade e adequação dos utensílios (escovas, esponjas etc.) necessários à realização da operação. Em bom estado de conservação." },
+          { id: "1.15.9", text: "Higienização adequada." },
+          { id: "1.16.1", text: "Controle integrado de vetores e pragas urbanas: ausência de vetores e pragas urbanas ou qualquer evidência de sua presença como fezes, ninhos e outros." },
+          { id: "1.16.2", text: "Adoção de medidas preventivas e corretivas com o objetivo de impedir a atração, o abrigo, o acesso e ou proliferação de vetores e pragas urbanas." },
+          { id: "1.16.3", text: "Em caso de adoção de controle químico, existência de comprovante de execução do serviço expedido por empresa especializada." },
+          { id: "1.17.1", text: "Abastecimento de água: sistema de abastecimento ligado à rede pública." },
+          { id: "1.17.2", text: "Sistema de captação própria, protegido, revestido e distante de fonte de contaminação." },
+          { id: "1.17.3", text: "Reservatório de água acessível com instalação hidráulica com volume, pressão e temperatura adequados, dotado de tampas, em satisfatória condição de uso, livre de vazamentos, infiltrações e descascamentos." },
+          { id: "1.17.4", text: "Existência de responsável comprovadamente capacitado para a higienização do reservatório da água." },
+          { id: "1.17.5", text: "Apropriada freqüência de higienização do reservatório de água." },
+          { id: "1.17.6", text: "Existência de registro da higienização do reservatório de água ou comprovante de execução de serviço em caso de terceirização." },
+          { id: "1.17.7", text: "Encanamento em estado satisfatório e ausência de infiltrações e interconexões, evitando conexão cruzada entre água potável e não potável." },
+          { id: "1.17.8", text: "Existência de planilha de registro da troca periódica do elemento filtrante." },
+          { id: "1.17.9", text: "Potabilidade da água atestada por meio de laudos laboratoriais, com adequada periodicidade, assinados por técnico responsável pela análise ou expedidos por empresa terceirizada." },
+          { id: "1.17.10", text: "Disponibilidade de reagentes e equipamentos necessários à análise da potabilidade de água realizadas no estabelecimento." },
+          { id: "1.17.11", text: "Controle de potabilidade realizado por técnico comprovadamente capacitado." },
+          { id: "1.17.12", text: "Gelo produzido com água potável, fabricado, manipulado e estocado sob condições sanitárias satisfatórias, quando destinado a entrar em contato com alimento ou superfície que entre em contato com alimento." },
+          { id: "1.17.13", text: "Vapor gerado a partir de água potável quando utilizado em contato com o alimento ou superfície que entre em contato com o alimento." },
+          { id: "1.18.1", text: "Manejo dos resíduos: recipientes para coleta de resíduos no interior do estabelecimento de fácil higienização e transporte, devidamente identificados e higienizados constantemente; uso de sacos de lixo apropriados. Quando necessário, recipientes tampados com acionamento não manual." },
+          { id: "1.18.2", text: "Retirada freqüente dos resíduos da área de processamento, evitando focos de contaminação." },
+          { id: "1.18.3", text: "Existência de área adequada para estocagem dos resíduos." },
+          { id: "1.19.1", text: "Esgotamento sanitário: fossas, esgoto conectado à rede pública, caixas de gordura em adequado estado de conservação e funcionamento." },
+          { id: "1.20.1", text: "Leiaute adequado ao processo produtivo: número, capacidade e distribuição das dependências de acordo com o ramo de atividade, volume de produção e expedição." },
+          { id: "1.20.2", text: "Áreas para recepção e depósito de matéria-prima, ingredientes e embalagens distintas das áreas de produção, armazenamento e expedição de produto final." }
+        ]
+      },
+      {
+        blocoId: 2,
+        blocoTitulo: "2. EQUIPAMENTOS, MÓVEIS E UTENSÍLIOS",
+        itens: [
+          { id: "2.1.1", text: "Equipamentos da linha de produção com desenho e número adequado ao ramo." },
+          { id: "2.1.2", text: "Dispostos de forma a permitir fácil acesso e higienização adequada." },
+          { id: "2.1.3", text: "Superfícies em contato com alimentos lisas, íntegras, impermeáveis, resistentes à corrosão, de fácil higienização e de material não contaminante." },
+          { id: "2.1.4", text: "Em adequado estado de conservação e funcionamento." },
+          { id: "2.1.5", text: "Equipamentos de conservação dos alimentos (refrigeradores, congeladores, câmaras frigoríficas e outros), bem como os destinados ao processamento térmico, com medidor de temperatura localizado em local apropriado e em adequado funcionamento." },
+          { id: "2.1.6", text: "Existência de planilhas de registro da temperatura, conservadas durante período adequado." },
+          { id: "2.1.7", text: "Existência de registros que comprovem que os equipamentos e maquinários passam por manutenção preventiva." },
+          { id: "2.1.8", text: "Existência de registros que comprovem a calibração dos instrumentos e equipamentos de medição ou comprovante da execução do serviço quando a calibração for realizada por empresas terceirizadas." },
+          { id: "2.2.1", text: "Móveis (mesas, bancadas, vitrines, estantes): em número suficiente, de material apropriado, resistentes, impermeáveis; em adequado estado de conservação, com superfícies íntegras." },
+          { id: "2.2.2", text: "Com desenho que permita uma fácil higienização (lisos, sem rugosidades e frestas)." },
+          { id: "2.3.1", text: "Utensílios: material não contaminante, resistentes à corrosão, de tamanho e forma que permitam fácil higienização; em adequado estado de conservação e em número suficiente e apropriado ao tipo de operação utilizada." },
+          { id: "2.3.2", text: "Armazenados em local apropriado, de forma organizada e protegidos contra a contaminação." },
+          { id: "2.4.1", text: "Higienização dos equipamentos e maquinários, e dos móveis e utensílios: existência de um responsável pela operação de higienização comprovadamente capacitado." },
+          { id: "2.4.2", text: "Freqüência de higienização adequada." },
+          { id: "2.4.3", text: "Existência de registro da higienização." },
+          { id: "2.4.4", text: "Produtos de higienização regularizados pelo Ministério da Saúde." },
+          { id: "2.4.5", text: "Disponibilidade dos produtos de higienização necessários à realização da operação." },
+          { id: "2.4.6", text: "Diluição dos produtos de higienização, tempo de contato e modo de uso/aplicação obedecem às instruções recomendadas pelo fabricante." },
+          { id: "2.4.7", text: "Produtos de higienização identificados e guardados em local adequado." },
+          { id: "2.4.8", text: "Disponibilidade e adequação dos utensílios necessários à realização da operação. Em bom estado de conservação." },
+          { id: "2.4.9", text: "Adequada higienização." }
+        ]
+      },
+      {
+        blocoId: 3,
+        blocoTitulo: "3. MANIPULADORES",
+        itens: [
+          { id: "3.1.1", text: "Utilização de uniforme de trabalho de cor clara, adequado à atividade e exclusivo para área de produção." },
+          { id: "3.1.2", text: "Limpos e em adequado estado de conservação." },
+          { id: "3.1.3", text: "Asseio pessoal: boa apresentação, asseio corporal, mãos limpas, unhas curtas, sem esmalte, sem adornos (anéis, pulseiras, brincos, etc.); manipuladores barbeados, com os cabelos protegidos." },
+          { id: "3.2.1", text: "Hábitos higiênicos: lavagem cuidadosa das mãos antes da manipulação de alimentos, principalmente após qualquer interrupção e depois do uso de sanitários." },
+          { id: "3.2.2", text: "Manipuladores não espirram sobre os alimentos, não cospem, não tossem, não fumam, não manipulam dinheiro ou não praticam outros atos que possam contaminar o alimento." },
+          { id: "3.2.3", text: "Cartazes de orientação aos manipuladores sobre a correta lavagem das mãos e demais hábitos de higiene, afixados em locais apropriados." },
+          { id: "3.3.1", text: "Estado de saúde: ausência de afecções cutâneas, feridas e supurações; ausência de sintomas e infecções respiratórias, gastrointestinais e oculares." },
+          { id: "3.4.1", text: "Programa de controle de saúde: existência de supervisão periódica do estado de saúde dos manipuladores." },
+          { id: "3.4.2", text: "Existência de registro dos exames realizados." },
+          { id: "3.5.1", text: "Equipamento de proteção individual: utilização de Equipamento de Proteção Individual." },
+          { id: "3.6.1", text: "Programa de capacitação dos manipuladores e supervisão: existência de programa de capacitação adequado e contínuo relacionado à higiene pessoal e à manipulação dos alimentos." },
+          { id: "3.6.2", text: "Existência de registros dessas capacitações." },
+          { id: "3.6.3", text: "Existência de supervisão da higiene pessoal e manipulação dos alimentos." },
+          { id: "3.6.4", text: "Existência de supervisor comprovadamente capacitado." }
+        ]
+      },
+      {
+        blocoId: 4,
+        blocoTitulo: "4. PRODUÇÃO E TRANSPORTE DO ALIMENTO",
+        itens: [
+          { id: "4.1.1", text: "Matéria-prima, ingredientes e embalagens: operações de recepção da matéria-prima, ingredientes e embalagens são realizadas em local protegido e isolado da área de processamento." },
+          { id: "4.1.2", text: "Matérias-primas, ingredientes e embalagens inspecionados na recepção." },
+          { id: "4.1.3", text: "Existência de planilhas de controle na recepção (temperatura e características sensoriais, condições de transporte e outros)." },
+          { id: "4.1.4", text: "Matérias-primas e ingredientes aguardando liberação e aqueles aprovados estão devidamente identificados." },
+          { id: "4.1.5", text: "Matérias-primas, ingredientes e embalagens reprovados no controle efetuado na recepção são devolvidos imediatamente ou identificados e armazenados em local separado." },
+          { id: "4.1.6", text: "Rótulos da matéria-prima e ingredientes atendem à legislação." },
+          { id: "4.1.7", text: "Critérios estabelecidos para a seleção das matérias-primas são baseados na segurança do alimento." },
+          { id: "4.1.8", text: "Armazenamento em local adequado e organizado; sobre estrados distantes do piso, ou sobre paletes, bem conservados e limpos, ou sobre outro sistema aprovado, afastados das paredes e distantes do teto de forma que permita apropriada higienização, iluminação e circulação de ar." },
+          { id: "4.1.9", text: "Uso das matérias-primas, ingredientes e embalagens respeita a ordem de entrada dos mesmos, sendo observado o prazo de validade." },
+          { id: "4.1.10", text: "Acondicionamento adequado das embalagens a serem utilizadas." },
+          { id: "4.1.11", text: "Rede de frio adequada ao volume e aos diferentes tipos de matérias-primas e ingredientes." },
+          { id: "4.2.1", text: "Fluxo de produção: locais para pré-preparo (\"área suja\") isolados da área de preparo por barreira física ou técnica." },
+          { id: "4.2.2", text: "Controle da circulação e acesso do pessoal." },
+          { id: "4.2.3", text: "Conservação adequada de materiais destinados ao reprocessamento." },
+          { id: "4.2.4", text: "Ordenado, linear e sem cruzamento." },
+          { id: "4.3.1", text: "Rotulagem e armazenamento do produto-final: dizeres de rotulagem com identificação visível e de acordo com a legislação vigente." },
+          { id: "4.3.2", text: "Produto final acondicionado em embalagens adequadas e íntegras." },
+          { id: "4.3.3", text: "Alimentos armazenados separados por tipo ou grupo, sobre estrados distantes do piso, ou sobre paletes, bem conservados e limpos ou sobre outro sistema aprovado, afastados das paredes e distantes do teto de forma a permitir apropriada higienização, iluminação e circulação de ar." },
+          { id: "4.3.4", text: "Ausência de material estranho, estragado ou tóxico." },
+          { id: "4.3.5", text: "Armazenamento em local limpo e conservado." },
+          { id: "4.3.6", text: "Controle adequado e existência de planilha de registro de temperatura, para ambientes com controle térmico." },
+          { id: "4.3.7", text: "Rede de frio adequada ao volume e aos diferentes tipos de alimentos." },
+          { id: "4.3.8", text: "Produtos avariados, com prazo de validade vencido, devolvidos ou recolhidos do mercado devidamente identificados e armazenados em local separado e de forma organizada." },
+          { id: "4.3.9", text: "Produtos finais aguardando resultado analítico ou em quarentena e aqueles aprovados devidamente identificados." },
+          { id: "4.4.1", text: "Controle de qualidade do produto final: existência de controle de qualidade do produto final." },
+          { id: "4.4.2", text: "Existência de programa de amostragem para análise laboratorial do produto final." },
+          { id: "4.4.3", text: "Existência de laudo laboratorial atestando o controle de qualidade do produto final, assinado pelo técnico da empresa responsável pela análise ou expedido por empresa terceirizada." },
+          { id: "4.4.4", text: "Existência de equipamentos e materiais necessários para análise do produto final realizadas no estabelecimento." },
+          { id: "4.5.1", text: "Transporte do produto final: produto transportado na temperatura especificada no rótulo." },
+          { id: "4.5.2", text: "Veículo limpo, com cobertura para proteção de carga. Ausência de vetores e pragas urbanas ou qualquer evidência de sua presença como fezes, ninhos e outros." },
+          { id: "4.5.3", text: "Transporte mantém a integridade do produto." },
+          { id: "4.5.4", text: "Veículo não transporta outras cargas que comprometam a segurança do produto." },
+          { id: "4.5.5", text: "Presença de equipamento para controle de temperatura quando se transporta alimentos que necessitam de condições especiais de conservação." }
+        ]
+      },
+      {
+        blocoId: 5,
+        blocoTitulo: "5. DOCUMENTAÇÃO",
+        itens: [
+          { id: "5.1.1", text: "Manual de Boas Práticas de Fabricação: operações executadas no estabelecimento estão de acordo com o Manual de Boas Práticas de Fabricação." },
+          { id: "5.2.1.1", text: "Procedimentos Operacionais Padronizados - Higienização das instalações, equipamentos e utensílios: existência de POP estabelecido para este item." },
+          { id: "5.2.1.2", text: "POP descrito está sendo cumprido." },
+          { id: "5.2.2.1", text: "POP - Controle de potabilidade da água: existência de POP estabelecido para controle de potabilidade da água." },
+          { id: "5.2.2.2", text: "POP descrito está sendo cumprido." },
+          { id: "5.2.3.1", text: "POP - Higiene e saúde dos manipuladores: existência de POP estabelecido para este item." },
+          { id: "5.2.3.2", text: "POP descrito está sendo cumprido." },
+          { id: "5.2.4.1", text: "POP - Manejo dos resíduos: existência de POP estabelecido para este item." },
+          { id: "5.2.4.2", text: "O POP descrito está sendo cumprido." },
+          { id: "5.2.5.1", text: "POP - Manutenção preventiva e calibração de equipamentos: existência de POP estabelecido para este item." },
+          { id: "5.2.5.2", text: "O POP descrito está sendo cumprido." },
+          { id: "5.2.6.1", text: "POP - Controle integrado de vetores e pragas urbanas: existência de POP estabelecido para este item." },
+          { id: "5.2.6.2", text: "O POP descrito está sendo cumprido." },
+          { id: "5.2.7.1", text: "POP - Seleção das matérias-primas, ingredientes e embalagens: existência de POP estabelecido para este item." },
+          { id: "5.2.7.2", text: "O POP descrito está sendo cumprido." },
+          { id: "5.2.8.1", text: "POP - Programa de recolhimento de alimentos: existência de POP estabelecido para este item." },
+          { id: "5.2.8.2", text: "O POP descrito está sendo cumprido." }
+        ]
+      }
+    ];
+
+    const STORAGE_PREFIX = "RDC275_CHECKLIST_";
+    const STORAGE_COMPANY_KEY = "RDC275_EMPRESA_CONFIG";
+    const STORAGE_RESP_KEY = "RDC275_LAST_RESP";
+    const STORAGE_CUSTOM_KEY = "rdc275_customizacoes";
+
+    // UTILITÁRIO ESCAPE HTML
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // PERSISTÊNCIA DAS CUSTOMIZAÇÕES
+    function getCustomizations() {
+      const raw = localStorage.getItem(STORAGE_CUSTOM_KEY);
+      if (!raw) return { editados: {}, adicionados: [], removidos: [] };
+      try {
+        const parsed = JSON.parse(raw);
+        return {
+          editados: parsed.editados || {},
+          adicionados: Array.isArray(parsed.adicionados) ? parsed.adicionados : [],
+          removidos: Array.isArray(parsed.removidos) ? parsed.removidos : []
+        };
+      } catch(e) {
+        return { editados: {}, adicionados: [], removidos: [] };
+      }
+    }
+
+    function saveCustomizations(custom) {
+      localStorage.setItem(STORAGE_CUSTOM_KEY, JSON.stringify(custom));
+    }
+
+    // LISTA ATIVA DE ITENS (CONSIDERANDO EDITADOS, ADICIONADOS E REMOVIDOS)
+    function getActiveChecklistData() {
+      const custom = getCustomizations();
+      const removidosSet = new Set(custom.removidos || []);
+
+      return CHECKLIST_DATA.map(bloco => {
+        const itens = [];
+
+        // Itens originais
+        bloco.itens.forEach(orig => {
+          if (removidosSet.has(orig.id)) return;
+          const edit = custom.editados[orig.id];
+          itens.push({
+            id: orig.id,
+            codigo: (edit && edit.codigo) ? edit.codigo : orig.id,
+            text: (edit && edit.texto) ? edit.texto : orig.text,
+            isCustom: false,
+            blocoId: bloco.blocoId
+          });
+        });
+
+        // Itens adicionados neste bloco
+        (custom.adicionados || []).forEach(add => {
+          if (add.bloco === bloco.blocoId && !removidosSet.has(add.id)) {
+            const edit = custom.editados[add.id];
+            itens.push({
+              id: add.id,
+              codigo: (edit && edit.codigo) ? edit.codigo : (add.codigo || "Item"),
+              text: (edit && edit.texto) ? edit.texto : (add.texto || ""),
+              isCustom: true,
+              blocoId: bloco.blocoId
+            });
+          }
+        });
+
+        return {
+          blocoId: bloco.blocoId,
+          blocoTitulo: bloco.blocoTitulo,
+          itens
+        };
+      });
+    }
+
+    function getAllActiveItems() {
+      const activeData = getActiveChecklistData();
+      const list = [];
+      activeData.forEach(b => {
+        b.itens.forEach(it => list.push(it));
+      });
+      return list;
+    }
+
+    function getTotalActiveItemsCount() {
+      return getAllActiveItems().length;
+    }
+
+    // ESTADO LOCAL DA FOLHA ATUAL
+    let currentDayData = {
+      date: new Date().toISOString().split("T")[0],
+      responsavel: "",
+      respostas: {}, // id: "SIM" | "NAO" | "NA"
+      ncData: {},   // id: { desc, acao, resp, prazo, fotoBase64 }
+      obsGerais: "",
+      elaboradoPor: "",
+      aprovadoPor: "",
+      prazoAdequacao: "Imediato para os itens da lista (RDC 275/2002)."
+    };
+
+    // FORMATAÇÃO DE DATAS
+    function formatDateBr(isoStr) {
+      if (!isoStr) return "";
+      const parts = isoStr.split("-");
+      if (parts.length === 3) {
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+      return isoStr;
+    }
+
+    // INICIALIZAÇÃO DO DOM
+    document.addEventListener("DOMContentLoaded", () => {
+      initTabs();
+      initCompanyInfo();
+      renderChecklistStructure();
+      bindChecklistDelegation();
+      initDateAndResp();
+      initStorageOrMock();
+      updateProgressUI();
+      bindEvents();
+      renderRegistrosTab();
+    });
+
+    // ABAS
+    function initTabs() {
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      tabBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          tabBtns.forEach(b => b.classList.remove("active"));
+          document.querySelectorAll(".tab-content").forEach(tc => tc.style.display = "none");
+          btn.classList.add("active");
+          const tabId = "tab-" + btn.dataset.tab;
+          const target = document.getElementById(tabId);
+          if (target) target.style.display = "block";
+
+          if (btn.dataset.tab === "registros") {
+            renderRegistrosTab();
+          } else if (btn.dataset.tab === "relatorio") {
+            initRelatorioTab();
+          }
+        });
+      });
+    }
+
+    // PERSISTÊNCIA DADOS EMPRESA
+    function initCompanyInfo() {
+      const fields = ["empRazao", "empFantasia", "empCnpj", "empRamo", "empCep", "empRua", "empNum", "empCompl", "empBairro", "empMunicipio", "empUf", "empNumFunc", "empNumTurnos", "empRespTecnico", "empFormacao", "empRespLegal"];
+      
+      const saved = localStorage.getItem(STORAGE_COMPANY_KEY);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          fields.forEach(f => {
+            if (parsed[f] !== undefined) {
+              const el = document.getElementById(f);
+              if (el) el.value = parsed[f];
+            }
+          });
+        } catch(e) {}
+      }
+
+      fields.forEach(f => {
+        const el = document.getElementById(f);
+        if (el) {
+          el.addEventListener("change", () => {
+            const currentObj = {};
+            fields.forEach(k => {
+              const itemEl = document.getElementById(k);
+              if (itemEl) currentObj[k] = itemEl.value;
+            });
+            localStorage.setItem(STORAGE_COMPANY_KEY, JSON.stringify(currentObj));
+          });
+        }
+      });
+
+      // Toggle recolhível
+      const toggleBtn = document.getElementById("btnToggleEmpresa");
+      const bodyEmp = document.getElementById("bodyEmpresa");
+      toggleBtn.addEventListener("click", () => {
+        const isOpen = bodyEmp.classList.contains("open");
+        if (isOpen) {
+          bodyEmp.classList.remove("open");
+          toggleBtn.classList.remove("open");
+        } else {
+          bodyEmp.classList.add("open");
+          toggleBtn.classList.add("open");
+        }
+      });
+    }
+
+    // DATA E RESPONSÁVEL
+    function initDateAndResp() {
+      const dateEl = document.getElementById("inspDate");
+      const respEl = document.getElementById("inspResp");
+      const today = new Date().toISOString().split("T")[0];
+
+      dateEl.value = today;
+      currentDayData.date = today;
+
+      const savedResp = localStorage.getItem(STORAGE_RESP_KEY);
+      if (savedResp) {
+        respEl.value = savedResp;
+        currentDayData.responsavel = savedResp;
+      }
+
+      dateEl.addEventListener("change", (e) => {
+        loadDayData(e.target.value);
+      });
+
+      respEl.addEventListener("change", (e) => {
+        currentDayData.responsavel = e.target.value;
+        localStorage.setItem(STORAGE_RESP_KEY, e.target.value);
+      });
+
+      document.getElementById("obsGerais").addEventListener("input", (e) => {
+        currentDayData.obsGerais = e.target.value;
+      });
+
+      document.getElementById("docElaboradoPor").addEventListener("input", (e) => {
+        currentDayData.elaboradoPor = e.target.value;
+      });
+
+      document.getElementById("docAprovadoPor").addEventListener("input", (e) => {
+        currentDayData.aprovadoPor = e.target.value;
+      });
+
+      document.getElementById("docPrazoAdequacao").addEventListener("input", (e) => {
+        currentDayData.prazoAdequacao = e.target.value;
+      });
+    }
+
+    // CRIAÇÃO DO ELEMENTO HTML DO CARD
+    function createItemCardElement(item, startInEditMode = false) {
+      const safeId = item.id.replace(/\./g, '_');
+      const card = document.createElement("div");
+      card.className = "item-card";
+      card.id = `card_${safeId}`;
+      card.dataset.itemId = item.id;
+
+      const defaultPlaceholders = {
+        1: "1.21.1",
+        2: "2.5.1",
+        3: "3.7.1",
+        4: "4.6.1",
+        5: "5.3.1"
+      };
+      const ph = defaultPlaceholders[item.blocoId] || `${item.blocoId}.1.1`;
+
+      card.innerHTML = `
+        <!-- Modo visualização -->
+        <div class="item-view-mode" id="viewMode_${safeId}" style="${startInEditMode ? 'display:none;' : ''}">
+          <div class="item-card-top">
+            <div class="item-header">
+              <span class="item-code" id="codeDisplay_${safeId}">${escapeHtml(item.codigo || item.id)}</span>
+              <span class="item-text" id="textDisplay_${safeId}">${escapeHtml(item.text)}</span>
+            </div>
+            <div class="item-card-actions">
+              <button type="button" class="btn-card-action btn-edit-item" data-id="${item.id}" title="Editar item" aria-label="Editar item ${item.codigo || item.id}">✏️</button>
+              <button type="button" class="btn-card-action btn-del-item" data-id="${item.id}" title="Excluir item" aria-label="Excluir item ${item.codigo || item.id}">🗑️</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modo edição -->
+        <div class="item-edit-mode" id="editMode_${safeId}" style="${startInEditMode ? '' : 'display:none;'}">
+          <div class="field-group" style="margin-bottom:0.4rem;">
+            <label class="field-label" style="font-size:0.75rem;">CÓDIGO DO ITEM</label>
+            <input type="text" class="field-input item-edit-code" id="editCode_${safeId}" value="${escapeHtml(item.codigo || item.id)}" placeholder="Ex.: ${ph}">
+          </div>
+          <div class="field-group" style="margin-bottom:0.5rem;">
+            <label class="field-label" style="font-size:0.75rem;">PERGUNTA / REQUISITO DO ITEM</label>
+            <textarea class="field-textarea item-edit-text" id="editText_${safeId}" rows="3" placeholder="Digite a pergunta do item..." style="resize:vertical; word-wrap:break-word;">${escapeHtml(item.text)}</textarea>
+          </div>
+          <div class="item-edit-actions">
+            <button type="button" class="btn-edit-save" data-id="${item.id}">💾 Salvar</button>
+            <button type="button" class="btn-edit-cancel" data-id="${item.id}">✖ Cancelar</button>
+          </div>
+        </div>
+
+        <!-- Botões SIM / NÃO / NA -->
+        <div class="item-buttons">
+          <button type="button" class="state-btn btn-sim" data-id="${item.id}" data-val="SIM">SIM ✓</button>
+          <button type="button" class="state-btn btn-nao" data-id="${item.id}" data-val="NAO">NÃO ✗</button>
+          <button type="button" class="state-btn btn-na" data-id="${item.id}" data-val="NA">NA ~</button>
+        </div>
+
+        <!-- Painel de Não Conformidade -->
+        <div class="nc-panel" id="ncPanel_${safeId}">
+          <div class="field-group">
+            <label class="field-label">DESCRIÇÃO DA NÃO CONFORMIDADE</label>
+            <textarea class="field-textarea nc-desc" rows="2" placeholder="Descreva a irregularidade observada..."></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">AÇÃO CORRETIVA PROPOSTA</label>
+            <textarea class="field-textarea nc-acao" rows="2" placeholder="Descreva a ação imediata/preventiva..."></textarea>
+          </div>
+          <div class="nc-dates-grid">
+            <div class="field-group">
+              <label class="field-label">RESPONSÁVEL PELA ADEQUAÇÃO</label>
+              <input type="text" class="field-input nc-resp" placeholder="Nome / Setor">
+            </div>
+            <div class="field-group">
+              <label class="field-label">PRAZO DE CONCLUSÃO</label>
+              <input type="date" class="field-input nc-prazo">
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">EVIDÊNCIA FOTOGRÁFICA</label>
+            <div class="photo-controls">
+              <label class="btn-foto" for="file_${safeId}">
+                <span class="btn-foto-text">📷 ADICIONAR FOTO</span>
+                <input type="file" id="file_${safeId}" accept="image/*" capture="environment" data-item-id="${item.id}" class="native-file-input">
+              </label>
+              <div class="photo-preview-wrap" style="display:none;" id="preview_${safeId}">
+                <img class="photo-thumb" src="" alt="Thumbnail Evidência" title="Toque para ampliar" data-item-id="${item.id}">
+                <div class="photo-preview-actions">
+                  <button type="button" class="btn-remove-photo" data-item-id="${item.id}">🗑️ Remover foto</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      return card;
+    }
+
+    // RENDERIZAR TODOS OS CARDS E BOTÕES ADICIONAR
+    function renderChecklistStructure() {
+      const container = document.getElementById("checklistContainer");
+      container.innerHTML = "";
+
+      const activeData = getActiveChecklistData();
+
+      activeData.forEach(bloco => {
+        const blocoEl = document.createElement("div");
+        blocoEl.className = "section-block";
+        blocoEl.id = `bloco_sec_${bloco.blocoId}`;
+
+        const bannerEl = document.createElement("div");
+        bannerEl.className = "section-banner";
+        bannerEl.innerHTML = `
+          <span>${bloco.blocoTitulo}</span>
+          <span class="section-counter" id="counter_bloco_${bloco.blocoId}">${bloco.itens.length} itens</span>
+        `;
+        blocoEl.appendChild(bannerEl);
+
+        const itemsEl = document.createElement("div");
+        itemsEl.className = "section-items";
+        itemsEl.id = `items_bloco_${bloco.blocoId}`;
+
+        bloco.itens.forEach(item => {
+          const card = createItemCardElement(item);
+          itemsEl.appendChild(card);
+        });
+
+        blocoEl.appendChild(itemsEl);
+
+        // Botão grande + ADICIONAR ITEM no final de cada bloco
+        const addBtn = document.createElement("button");
+        addBtn.type = "button";
+        addBtn.className = "btn-add-item";
+        addBtn.dataset.blocoId = bloco.blocoId;
+        addBtn.innerHTML = `➕ ADICIONAR ITEM`;
+        blocoEl.appendChild(addBtn);
+
+        container.appendChild(blocoEl);
+      });
+    }
+
+    // ATUALIZAR CONTADORES DOS BLOCOS
+    function updateAllCounters() {
+      const activeData = getActiveChecklistData();
+      activeData.forEach(b => {
+        const counterEl = document.getElementById(`counter_bloco_${b.blocoId}`);
+        if (counterEl) {
+          counterEl.textContent = `${b.itens.length} itens`;
+        }
+      });
+    }
+
+    // MODO EDIÇÃO DO CARD
+    function openEditMode(itemId) {
+      const safeId = itemId.replace(/\./g, '_');
+      const viewMode = document.getElementById(`viewMode_${safeId}`);
+      const editMode = document.getElementById(`editMode_${safeId}`);
+      if (viewMode) viewMode.style.display = "none";
+      if (editMode) {
+        editMode.style.display = "block";
+        const txt = document.getElementById(`editText_${safeId}`);
+        if (txt) txt.focus();
+      }
+    }
+
+    function saveEdit(itemId) {
+      const safeId = itemId.replace(/\./g, '_');
+      const editCodeInput = document.getElementById(`editCode_${safeId}`);
+      const editTextInput = document.getElementById(`editText_${safeId}`);
+      if (!editCodeInput || !editTextInput) return;
+
+      const newCode = editCodeInput.value.trim();
+      const newText = editTextInput.value.trim();
+
+      if (!newCode) {
+        alert("Por favor, informe o código do item.");
+        editCodeInput.focus();
+        return;
+      }
+      if (!newText) {
+        alert("Por favor, informe a pergunta do item.");
+        editTextInput.focus();
+        return;
+      }
+
+      const custom = getCustomizations();
+      if (itemId.startsWith("custom_")) {
+        const addObj = (custom.adicionados || []).find(a => a.id === itemId);
+        if (addObj) {
+          addObj.codigo = newCode;
+          addObj.texto = newText;
+        }
+      }
+      custom.editados[itemId] = { codigo: newCode, texto: newText };
+      saveCustomizations(custom);
+
+      // Atualiza visualização
+      const codeDisp = document.getElementById(`codeDisplay_${safeId}`);
+      const textDisp = document.getElementById(`textDisplay_${safeId}`);
+      if (codeDisp) codeDisp.textContent = newCode;
+      if (textDisp) textDisp.textContent = newText;
+
+      const viewMode = document.getElementById(`viewMode_${safeId}`);
+      const editMode = document.getElementById(`editMode_${safeId}`);
+      if (viewMode) viewMode.style.display = "block";
+      if (editMode) editMode.style.display = "none";
+
+      updateProgressUI();
+    }
+
+    function cancelEdit(itemId) {
+      const safeId = itemId.replace(/\./g, '_');
+      const card = document.getElementById(`card_${safeId}`);
+      if (!card) return;
+
+      const custom = getCustomizations();
+      const editInfo = custom.editados[itemId];
+      const addedItem = (custom.adicionados || []).find(a => a.id === itemId);
+
+      // Se for recém-adicionado e cancelado sem nenhum texto salvo, descarta
+      if (addedItem && !addedItem.texto && (!editInfo || !editInfo.texto)) {
+        custom.adicionados = custom.adicionados.filter(a => a.id !== itemId);
+        saveCustomizations(custom);
+        card.remove();
+        updateAllCounters();
+        updateProgressUI();
+        return;
+      }
+
+      const origCode = (editInfo && editInfo.codigo) || (addedItem && addedItem.codigo) || itemId;
+      const origText = (editInfo && editInfo.texto) || (addedItem && addedItem.texto) || "";
+
+      const editCodeInput = document.getElementById(`editCode_${safeId}`);
+      const editTextInput = document.getElementById(`editText_${safeId}`);
+      if (editCodeInput) editCodeInput.value = origCode;
+      if (editTextInput) editTextInput.value = origText;
+
+      const viewMode = document.getElementById(`viewMode_${safeId}`);
+      const editMode = document.getElementById(`editMode_${safeId}`);
+      if (viewMode) viewMode.style.display = "block";
+      if (editMode) editMode.style.display = "none";
+    }
+
+    // EXCLUIR ITEM DEFINITIVAMENTE
+    function deleteItem(itemId) {
+      const custom = getCustomizations();
+
+      // Se for adicionado, remove de adicionados
+      custom.adicionados = (custom.adicionados || []).filter(a => a.id !== itemId);
+
+      // Adiciona em removidos para não aparecer mais
+      if (!custom.removidos.includes(itemId)) {
+        custom.removidos.push(itemId);
+      }
+      delete custom.editados[itemId];
+      saveCustomizations(custom);
+
+      // Remove do DOM
+      const safeId = itemId.replace(/\./g, '_');
+      const cardEl = document.getElementById(`card_${safeId}`);
+      if (cardEl) {
+        cardEl.remove();
+      }
+
+      // Remove respostas da folha atual se existirem
+      if (currentDayData.respostas && currentDayData.respostas[itemId]) {
+        delete currentDayData.respostas[itemId];
+      }
+      if (currentDayData.ncData && currentDayData.ncData[itemId]) {
+        delete currentDayData.ncData[itemId];
+      }
+
+      updateAllCounters();
+      updateProgressUI();
+    }
+
+    // ADICIONAR NOVO ITEM AO BLOCO
+    function addNewItemToBlock(blocoId) {
+      const custom = getCustomizations();
+      const newId = "custom_" + Date.now();
+      const defaultPlaceholders = {
+        1: "1.21.1",
+        2: "2.5.1",
+        3: "3.7.1",
+        4: "4.6.1",
+        5: "5.3.1"
+      };
+      const phCode = defaultPlaceholders[blocoId] || `${blocoId}.1.1`;
+
+      const newItem = {
+        id: newId,
+        bloco: blocoId,
+        codigo: phCode,
+        texto: ""
+      };
+      custom.adicionados.push(newItem);
+      saveCustomizations(custom);
+
+      const itemsContainer = document.getElementById(`items_bloco_${blocoId}`);
+      if (itemsContainer) {
+        const cardEl = createItemCardElement(newItem, true);
+        itemsContainer.appendChild(cardEl);
+        openEditMode(newId);
+      }
+
+      updateAllCounters();
+      updateProgressUI();
+    }
+
+    // DELEGAÇÃO DE EVENTOS PARA ITENS DO CHECKLIST
+    function bindChecklistDelegation() {
+      const container = document.getElementById("checklistContainer");
+      if (!container) return;
+
+      // 1. Captura do input file nativo via delegação do evento 'change'
+      container.addEventListener("change", (e) => {
+        if (e.target && e.target.matches('input[type="file"]')) {
+          processPhotoCapture(e.target);
+        }
+      });
+
+      // 2. Cliques: botões de ação do card, tri-state, remoção de foto e adicionar
+      container.addEventListener("click", (e) => {
+        // Editar item
+        const editBtn = e.target.closest(".btn-edit-item");
+        if (editBtn) {
+          openEditMode(editBtn.dataset.id);
+          return;
+        }
+
+        // Excluir item
+        const delBtn = e.target.closest(".btn-del-item");
+        if (delBtn) {
+          if (window.confirm("Excluir este item definitivamente?")) {
+            deleteItem(delBtn.dataset.id);
+          }
+          return;
+        }
+
+        // Salvar edição
+        const saveBtn = e.target.closest(".btn-edit-save");
+        if (saveBtn) {
+          saveEdit(saveBtn.dataset.id);
+          return;
+        }
+
+        // Cancelar edição
+        const cancelBtn = e.target.closest(".btn-edit-cancel");
+        if (cancelBtn) {
+          cancelEdit(cancelBtn.dataset.id);
+          return;
+        }
+
+        // Adicionar item no bloco
+        const addBtn = e.target.closest(".btn-add-item");
+        if (addBtn) {
+          const bId = parseInt(addBtn.dataset.blocoId, 10);
+          addNewItemToBlock(bId);
+          return;
+        }
+
+        // Remover foto
+        const removeBtn = e.target.closest(".btn-remove-photo");
+        if (removeBtn) {
+          const itemId = removeBtn.getAttribute("data-item-id");
+          if (itemId) removePhoto(itemId);
+          return;
+        }
+
+        // Zoom na foto
+        const thumb = e.target.closest(".photo-thumb");
+        if (thumb && thumb.src) {
+          mostrarFotoModal(thumb.src);
+          return;
+        }
+
+        // Botões SIM / NÃO / NA
+        const stateBtn = e.target.closest(".state-btn");
+        if (stateBtn) {
+          setItemResponse(stateBtn.dataset.id, stateBtn.dataset.val);
+          return;
+        }
+      });
+
+      // 3. Digitação nos campos do painel de não conformidade
+      container.addEventListener("input", (e) => {
+        const target = e.target;
+        const card = target.closest(".item-card");
+        if (!card) return;
+        const rawId = card.dataset.itemId || card.id.replace("card_", "");
+        if (!currentDayData.ncData[rawId]) {
+          currentDayData.ncData[rawId] = {};
+        }
+        if (target.classList.contains("nc-desc")) currentDayData.ncData[rawId].desc = target.value;
+        if (target.classList.contains("nc-acao")) currentDayData.ncData[rawId].acao = target.value;
+        if (target.classList.contains("nc-resp")) currentDayData.ncData[rawId].resp = target.value;
+        if (target.classList.contains("nc-prazo")) currentDayData.ncData[rawId].prazo = target.value;
+      });
+    }
+
+    // PROCESSAMENTO DE FOTO (FILEREADER + CANVAS COMPRESSÃO 800PX)
+    function processPhotoCapture(inputEl) {
+      const file = inputEl.files && inputEl.files[0];
+      if (!file) return;
+
+      const itemId = inputEl.getAttribute("data-item-id") || (inputEl.id ? inputEl.id.replace("file_", "").replace(/_/g, ".") : null);
+      if (!itemId) return;
+
+      const safeId = itemId.replace(/\./g, '_');
+      const panel = document.getElementById(`ncPanel_${safeId}`);
+      if (!panel) return;
+
+      const reader = new FileReader();
+      reader.onerror = () => {
+        alert("Erro ao ler a imagem capturada. Tente novamente.");
+      };
+      reader.onload = (re) => {
+        const img = new Image();
+        img.onerror = () => {
+          alert("Não foi possível carregar a imagem para processamento.");
+        };
+        img.onload = () => {
+          const maxDim = 800;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) {
+              h = Math.round((h * maxDim) / w);
+              w = maxDim;
+            } else {
+              w = Math.round((w * maxDim) / h);
+              h = maxDim;
+            }
+          }
+
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.6);
+
+          if (!currentDayData.ncData[itemId]) {
+            currentDayData.ncData[itemId] = {};
+          }
+          currentDayData.ncData[itemId].fotoBase64 = dataUrl;
+
+          const thumbEl = panel.querySelector(".photo-thumb");
+          if (thumbEl) thumbEl.src = dataUrl;
+
+          const previewWrap = panel.querySelector(".photo-preview-wrap");
+          if (previewWrap) previewWrap.style.display = "flex";
+
+          const btnFotoText = panel.querySelector(".btn-foto-text");
+          if (btnFotoText) btnFotoText.textContent = "📷 TROCAR FOTO";
+
+          // Limpa input para disparar novo change se o usuário repetir a ação
+          inputEl.value = "";
+
+          // Tenta persistir no localStorage com tratamento gracioso de limite de cota
+          try {
+            localStorage.setItem(STORAGE_PREFIX + currentDayData.date, JSON.stringify(currentDayData));
+          } catch (err) {
+            console.warn("Storage quota:", err);
+            alert("Armazenamento cheio — remova fotos antigas ou exporte o relatório");
+          }
+        };
+        img.src = re.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // REMOÇÃO DE FOTO
+    function removePhoto(itemId) {
+      if (currentDayData.ncData && currentDayData.ncData[itemId]) {
+        currentDayData.ncData[itemId].fotoBase64 = "";
+      }
+      const safeId = itemId.replace(/\./g, '_');
+      const panel = document.getElementById(`ncPanel_${safeId}`);
+      if (panel) {
+        const fileEl = panel.querySelector(".native-file-input");
+        if (fileEl) fileEl.value = "";
+        const thumbEl = panel.querySelector(".photo-thumb");
+        if (thumbEl) thumbEl.src = "";
+        const previewWrap = panel.querySelector(".photo-preview-wrap");
+        if (previewWrap) previewWrap.style.display = "none";
+        const btnFotoText = panel.querySelector(".btn-foto-text");
+        if (btnFotoText) btnFotoText.textContent = "📷 ADICIONAR FOTO";
+      }
+
+      try {
+        localStorage.setItem(STORAGE_PREFIX + currentDayData.date, JSON.stringify(currentDayData));
+      } catch (err) {}
+    }
+
+    // DEFINIR VALOR DE RESPOSTA DO ITEM
+    function setItemResponse(id, val) {
+      const safeId = id.replace(/\./g, '_');
+      const card = document.getElementById(`card_${safeId}`);
+      if (!card) return;
+
+      const simBtn = card.querySelector('.btn-sim');
+      const naoBtn = card.querySelector('.btn-nao');
+      const naBtn = card.querySelector('.btn-na');
+      const ncPanel = document.getElementById(`ncPanel_${safeId}`);
+
+      // Se clicar no mesmo botão, desmarca (fica pendente)
+      if (currentDayData.respostas[id] === val) {
+        delete currentDayData.respostas[id];
+        card.classList.remove("state-sim", "state-nao", "state-na");
+        simBtn.classList.remove("active");
+        naoBtn.classList.remove("active");
+        naBtn.classList.remove("active");
+        if (ncPanel) ncPanel.classList.remove("open");
+        updateProgressUI();
+        return;
+      }
+
+      currentDayData.respostas[id] = val;
+      card.classList.remove("state-sim", "state-nao", "state-na");
+      simBtn.classList.remove("active");
+      naoBtn.classList.remove("active");
+      naBtn.classList.remove("active");
+
+      if (val === "SIM") {
+        card.classList.add("state-sim");
+        simBtn.classList.add("active");
+        if (ncPanel) ncPanel.classList.remove("open");
+      } else if (val === "NAO") {
+        card.classList.add("state-nao");
+        naoBtn.classList.add("active");
+        if (ncPanel) ncPanel.classList.add("open");
+      } else if (val === "NA") {
+        card.classList.add("state-na");
+        naBtn.classList.add("active");
+        if (ncPanel) ncPanel.classList.remove("open");
+      }
+
+      updateProgressUI();
+    }
+
+    // PROGRESSO UI
+    function updateProgressUI() {
+      const activeItems = getAllActiveItems();
+      const totalActive = activeItems.length;
+      const activeIds = new Set(activeItems.map(it => it.id));
+
+      let answered = 0;
+      Object.keys(currentDayData.respostas || {}).forEach(k => {
+        if (activeIds.has(k) && currentDayData.respostas[k]) {
+          answered++;
+        }
+      });
+
+      const pill = document.getElementById("progressPill");
+      if (pill) {
+        pill.textContent = `${answered} de ${totalActive} itens respondidos`;
+        if (answered >= totalActive && totalActive > 0) {
+          pill.style.background = "#d4edda";
+          pill.style.borderColor = "#28a745";
+          pill.style.color = "#155724";
+        } else {
+          pill.style.background = "#fdf0ba";
+          pill.style.borderColor = "#e0c25a";
+          pill.style.color = "#4a3800";
+        }
+      }
+    }
+
+    // MOCK DATA INICIAL CASO VAZIO
+    function initStorageOrMock() {
+      const keys = Object.keys(localStorage).filter(k => k.startsWith(STORAGE_PREFIX));
+      if (keys.length === 0) {
+        // Criar um registro realista para não iniciar vazio
+        const today = new Date().toISOString().split("T")[0];
+        const mockResponses = {};
+        const mockNc = {};
+
+        CHECKLIST_DATA.forEach(b => {
+          b.itens.forEach(it => {
+            mockResponses[it.id] = "SIM";
+          });
+        });
+
+        // 5 não conformidades representativas
+        const ncIds = ["1.4.3", "1.10.10", "2.1.6", "3.1.3", "4.1.8"];
+        ncIds.forEach(id => {
+          mockResponses[id] = "NAO";
+          mockNc[id] = {
+            desc: "Identificada não conformidade pontual com necessidade de adequação imediata segundo as BPF.",
+            acao: "Proceder à correção e notificar os responsáveis pela área.",
+            resp: "Encarregado de Produção",
+            prazo: today,
+            fotoBase64: ""
+          };
+        });
+
+        // Alguns itens NA
+        mockResponses["1.9.1"] = "NA";
+        mockResponses["1.9.2"] = "NA";
+        mockResponses["1.17.2"] = "NA";
+
+        const mockPayload = {
+          date: today,
+          responsavel: "Nutricionista Responsável",
+          respostas: mockResponses,
+          ncData: mockNc,
+          obsGerais: "Inspeção mensal de rotina realizada em conformidade com as diretrizes da RDC 275/2002. Recomenda-se acompanhamento rigoroso do plano de ação corretivo.",
+          elaboradoPor: "Nutricionista Responsável",
+          aprovadoPor: "Diretoria",
+          prazoAdequacao: "Imediato para os itens da lista (RDC 275/2002)."
+        };
+
+        try {
+          localStorage.setItem(STORAGE_PREFIX + today, JSON.stringify(mockPayload));
+        } catch(e) {}
+      }
+
+      loadDayData(document.getElementById("inspDate").value);
+    }
+
+    // CARREGAR DADOS DO DIA
+    function loadDayData(dateStr) {
+      currentDayData = {
+        date: dateStr,
+        responsavel: localStorage.getItem(STORAGE_RESP_KEY) || "",
+        respostas: {},
+        ncData: {},
+        obsGerais: "",
+        elaboradoPor: "",
+        aprovadoPor: "",
+        prazoAdequacao: "Imediato para os itens da lista (RDC 275/2002)."
+      };
+
+      const raw = localStorage.getItem(STORAGE_PREFIX + dateStr);
+      if (raw) {
+        try {
+          const parsed = JSON.parse(raw);
+          currentDayData = { ...currentDayData, ...parsed };
+        } catch(e) {}
+      }
+
+      document.getElementById("inspDate").value = currentDayData.date;
+      document.getElementById("inspResp").value = currentDayData.responsavel || "";
+      document.getElementById("obsGerais").value = currentDayData.obsGerais || "";
+      document.getElementById("docElaboradoPor").value = currentDayData.elaboradoPor || "";
+      document.getElementById("docAprovadoPor").value = currentDayData.aprovadoPor || "";
+      document.getElementById("docPrazoAdequacao").value = currentDayData.prazoAdequacao !== undefined && currentDayData.prazoAdequacao !== null ? currentDayData.prazoAdequacao : "Imediato para os itens da lista (RDC 275/2002).";
+
+      // Atualizar cards
+      const activeData = getActiveChecklistData();
+      activeData.forEach(b => {
+        b.itens.forEach(it => {
+          const safeId = it.id.replace(/\./g, '_');
+          const card = document.getElementById(`card_${safeId}`);
+          if (!card) return;
+
+          const simBtn = card.querySelector('.btn-sim');
+          const naoBtn = card.querySelector('.btn-nao');
+          const naBtn = card.querySelector('.btn-na');
+          const ncPanel = document.getElementById(`ncPanel_${safeId}`);
+
+          card.classList.remove("state-sim", "state-nao", "state-na");
+          simBtn.classList.remove("active");
+          naoBtn.classList.remove("active");
+          naBtn.classList.remove("active");
+          if (ncPanel) {
+            ncPanel.classList.remove("open");
+            ncPanel.querySelector(".nc-desc").value = "";
+            ncPanel.querySelector(".nc-acao").value = "";
+            ncPanel.querySelector(".nc-resp").value = "";
+            ncPanel.querySelector(".nc-prazo").value = "";
+            const previewWrap = ncPanel.querySelector(".photo-preview-wrap");
+            if (previewWrap) previewWrap.style.display = "none";
+            const thumbImg = ncPanel.querySelector(".photo-thumb");
+            if (thumbImg) thumbImg.src = "";
+            const btnFotoText = ncPanel.querySelector(".btn-foto-text");
+            if (btnFotoText) btnFotoText.textContent = "📷 ADICIONAR FOTO";
+            const fileInp = ncPanel.querySelector(".native-file-input");
+            if (fileInp) fileInp.value = "";
+          }
+
+          const val = currentDayData.respostas[it.id];
+          if (val === "SIM") {
+            card.classList.add("state-sim");
+            simBtn.classList.add("active");
+          } else if (val === "NAO") {
+            card.classList.add("state-nao");
+            naoBtn.classList.add("active");
+            if (ncPanel) {
+              ncPanel.classList.add("open");
+              const savedNc = currentDayData.ncData[it.id];
+              if (savedNc) {
+                ncPanel.querySelector(".nc-desc").value = savedNc.desc || "";
+                ncPanel.querySelector(".nc-acao").value = savedNc.acao || "";
+                ncPanel.querySelector(".nc-resp").value = savedNc.resp || "";
+                ncPanel.querySelector(".nc-prazo").value = savedNc.prazo || "";
+                if (savedNc.fotoBase64) {
+                  const thumbImg = ncPanel.querySelector(".photo-thumb");
+                  if (thumbImg) thumbImg.src = savedNc.fotoBase64;
+                  const previewWrap = ncPanel.querySelector(".photo-preview-wrap");
+                  if (previewWrap) previewWrap.style.display = "flex";
+                  const btnFotoText = ncPanel.querySelector(".btn-foto-text");
+                  if (btnFotoText) btnFotoText.textContent = "📷 TROCAR FOTO";
+                }
+              }
+            }
+          } else if (val === "NA") {
+            card.classList.add("state-na");
+            naBtn.classList.add("active");
+          }
+        });
+      });
+
+      updateProgressUI();
+    }
+
+    // SALVAR DIA NO LOCALSTORAGE E BAIXAR PDF AUTOMATICAMENTE
+    function saveDayToStorage() {
+      const respVal = document.getElementById("inspResp").value.trim();
+      if (!respVal) {
+        alert("Por favor, preencha o campo 'RESPONSÁVEL PELA INSPEÇÃO' antes de salvar.");
+        document.getElementById("inspResp").focus();
+        return;
+      }
+      currentDayData.responsavel = respVal;
+      localStorage.setItem(STORAGE_RESP_KEY, respVal);
+
+      currentDayData.obsGerais = document.getElementById("obsGerais").value;
+      currentDayData.elaboradoPor = document.getElementById("docElaboradoPor").value.trim();
+      currentDayData.aprovadoPor = document.getElementById("docAprovadoPor").value.trim();
+      currentDayData.prazoAdequacao = document.getElementById("docPrazoAdequacao").value.trim() || "Imediato para os itens da lista (RDC 275/2002).";
+
+      try {
+        localStorage.setItem(STORAGE_PREFIX + currentDayData.date, JSON.stringify(currentDayData));
+        alert(`Inspeção do dia ${formatDateBr(currentDayData.date)} salva com sucesso!`);
+        updateRegistrosBadge();
+        gerarPDFDoDia(currentDayData.date);
+      } catch (err) {
+        console.error(err);
+        alert("Armazenamento cheio — remova fotos antigas ou exporte o relatório");
+      }
+    }
+
+    // GERAÇÃO DO PDF DO DIA (jsPDF ou fallback para impressão)
+    function gerarPDFDoDia(dataStr) {
+      if (typeof window.jspdf !== "undefined") {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 14;
+        const maxContentWidth = pageWidth - (margin * 2);
+        let y = margin;
+
+        function checkAddPage(neededHeight) {
+          if (y + neededHeight > pageHeight - margin) {
+            doc.addPage();
+            y = margin;
+            return true;
+          }
+          return false;
+        }
+
+        // CABEÇALHO
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(13);
+        doc.setTextColor(30, 30, 30);
+        doc.text("RDC Nº 275/2002 - ANEXO II", margin, y);
+        y += 6;
+
+        doc.setFontSize(10);
+        const titLines = doc.splitTextToSize("Lista de Verificação das Boas Práticas de Fabricação em Estabelecimentos Produtores/Industrializadores de Alimentos", maxContentWidth);
+        doc.text(titLines, margin, y);
+        y += (titLines.length * 4.5) + 3;
+
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.3);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 5;
+
+        // IDENTIFICAÇÃO DA EMPRESA (valores preenchidos)
+        const empFields = [
+          { label: "Razão Social", val: document.getElementById("empRazao")?.value },
+          { label: "Nome Fantasia", val: document.getElementById("empFantasia")?.value },
+          { label: "CNPJ/CPF", val: document.getElementById("empCnpj")?.value },
+          { label: "Endereço", val: document.getElementById("empRua")?.value ? `${document.getElementById("empRua").value}, ${document.getElementById("empNum")?.value || 's/n'} ${document.getElementById("empCompl")?.value || ''}`.trim() : "" },
+          { label: "Bairro", val: document.getElementById("empBairro")?.value },
+          { label: "Município/UF", val: (document.getElementById("empMunicipio")?.value || "") + (document.getElementById("empUf")?.value ? ` - ${document.getElementById("empUf").value}` : "") },
+          { label: "CEP", val: document.getElementById("empCep")?.value },
+          { label: "Ramo de Atividade", val: document.getElementById("empRamo")?.value },
+          { label: "Nº de Funcionários", val: document.getElementById("empNumFunc")?.value },
+          { label: "Nº de Turnos", val: document.getElementById("empNumTurnos")?.value },
+          { label: "Responsável Técnico", val: document.getElementById("empRespTecnico")?.value },
+          { label: "Formação Acadêmica", val: document.getElementById("empFormacao")?.value },
+          { label: "Responsável Legal / Proprietário", val: document.getElementById("empRespLegal")?.value }
+        ].filter(f => f.val && String(f.val).trim() !== "");
+
+        if (empFields.length > 0) {
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(9);
+          doc.text("IDENTIFICAÇÃO DA EMPRESA", margin, y);
+          y += 4.5;
+
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8);
+          empFields.forEach(f => {
+            checkAddPage(5);
+            doc.setFont("helvetica", "bold");
+            doc.text(`${f.label}: `, margin, y);
+            const lw = doc.getTextWidth(`${f.label}: `);
+            doc.setFont("helvetica", "normal");
+            const valLines = doc.splitTextToSize(String(f.val), maxContentWidth - lw);
+            doc.text(valLines, margin + lw, y);
+            y += (valLines.length * 3.8);
+          });
+          y += 3;
+          doc.line(margin, y, pageWidth - margin, y);
+          y += 5;
+        }
+
+        // DADOS DA INSPEÇÃO
+        checkAddPage(15);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        doc.text("DADOS DA INSPEÇÃO", margin, y);
+        y += 4.5;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text(`Data da Inspeção: ${formatDateBr(dataStr)}`, margin, y);
+        y += 4;
+        doc.text(`Responsável pela Inspeção: ${currentDayData.responsavel || "-"}`, margin, y);
+        y += 5;
+
+        // RESUMO DO DIA
+        const activePdfData = getActiveChecklistData();
+        const activePdfItems = getAllActiveItems();
+        const totalActivePdf = activePdfItems.length;
+        const activePdfIds = new Set(activePdfItems.map(it => it.id));
+
+        let totalResp = 0, totalSim = 0, totalNao = 0, totalNa = 0;
+        Object.entries(currentDayData.respostas || {}).forEach(([k, v]) => {
+          if (activePdfIds.has(k)) {
+            totalResp++;
+            if (v === "SIM") totalSim++;
+            else if (v === "NAO") totalNao++;
+            else if (v === "NA") totalNa++;
+          }
+        });
+        const aplicaveis = totalSim + totalNao;
+        const taxa = aplicaveis > 0 ? Math.round((totalSim / aplicaveis) * 100) : 0;
+        let classificacao = "GRUPO 3 (0 a 50% - Crítico)";
+        if (taxa >= 76) classificacao = "GRUPO 1 (76 a 100% - Excelente)";
+        else if (taxa >= 51) classificacao = "GRUPO 2 (51 a 75% - Regular)";
+
+        checkAddPage(22);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        doc.text("RESUMO DA CONFORMIDADE (RDC 275/2002)", margin, y);
+        y += 4.5;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        doc.text(`Total Respondidos: ${totalResp} de ${totalActivePdf} | Conformes (SIM): ${totalSim} | Não Conformes (NÃO): ${totalNao} | NA: ${totalNa}`, margin, y);
+        y += 4;
+        doc.setFont("helvetica", "bold");
+        doc.text(`Índice de Conformidade: ${taxa}%  —  Classificação: ${classificacao}`, margin, y);
+        y += 6;
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 5;
+
+        // NÃO CONFORMIDADES
+        checkAddPage(10);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9.5);
+        doc.text(`NÃO CONFORMIDADES REGISTRADAS (${totalNao})`, margin, y);
+        y += 5;
+
+        if (totalNao === 0) {
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8.5);
+          doc.text("Nenhuma não conformidade identificada nesta inspeção.", margin, y);
+          y += 6;
+        } else {
+          activePdfData.forEach(bloco => {
+            bloco.itens.forEach(item => {
+              if (currentDayData.respostas[item.id] === "NAO") {
+                const nc = currentDayData.ncData[item.id] || {};
+                const neededH = nc.fotoBase64 ? 50 : 25;
+                checkAddPage(neededH);
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(8.5);
+                doc.setTextColor(170, 40, 0);
+                doc.text(`Item ${item.codigo || item.id}`, margin, y);
+                doc.setTextColor(30, 30, 30);
+                y += 4;
+
+                doc.setFont("helvetica", "italic");
+                doc.setFontSize(8);
+                const reqLines = doc.splitTextToSize(`Requisito: ${item.text}`, maxContentWidth);
+                doc.text(reqLines, margin, y);
+                y += (reqLines.length * 3.5) + 1.5;
+
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(8);
+                if (nc.desc) {
+                  const dLines = doc.splitTextToSize(`Descrição: ${nc.desc}`, maxContentWidth);
+                  doc.text(dLines, margin, y);
+                  y += (dLines.length * 3.5) + 1;
+                }
+                if (nc.acao) {
+                  const aLines = doc.splitTextToSize(`Ação Corretiva: ${nc.acao}`, maxContentWidth);
+                  doc.text(aLines, margin, y);
+                  y += (aLines.length * 3.5) + 1;
+                }
+                const respPrazo = `Responsável: ${nc.resp || "-"} | Prazo: ${nc.prazo ? formatDateBr(nc.prazo) : "-"}`;
+                doc.text(respPrazo, margin, y);
+                y += 4;
+
+                if (nc.fotoBase64) {
+                  try {
+                    checkAddPage(32);
+                    doc.addImage(nc.fotoBase64, "JPEG", margin, y, 40, 28);
+                    y += 30;
+                  } catch (e) {
+                    console.warn("Erro ao anexar imagem no PDF", e);
+                  }
+                }
+
+                y += 2;
+                doc.setDrawColor(230, 230, 230);
+                doc.line(margin, y, pageWidth - margin, y);
+                y += 4;
+              }
+            });
+          });
+        }
+
+        // OBSERVAÇÕES GERAIS
+        if (currentDayData.obsGerais && currentDayData.obsGerais.trim()) {
+          checkAddPage(20);
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(9);
+          doc.text("OBSERVAÇÕES E CONSIDERAÇÕES FINAIS", margin, y);
+          y += 4.5;
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(8);
+          const obsLines = doc.splitTextToSize(currentDayData.obsGerais.trim(), maxContentWidth);
+          doc.text(obsLines, margin, y);
+          y += (obsLines.length * 3.5) + 5;
+        }
+
+        // RODAPÉ DO DOCUMENTO
+        checkAddPage(25);
+        y += 4;
+        doc.setDrawColor(180, 180, 180);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 5;
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(8.5);
+        const elab = currentDayData.elaboradoPor || document.getElementById("docElaboradoPor")?.value || "-";
+        const aprov = currentDayData.aprovadoPor || document.getElementById("docAprovadoPor")?.value || "-";
+        const prazo = currentDayData.prazoAdequacao || document.getElementById("docPrazoAdequacao")?.value || "Imediato para os itens da lista (RDC 275/2002).";
+
+        doc.text(`Elaborado por: ${elab}`, margin, y);
+        y += 4.5;
+        doc.text(`Aprovado por: ${aprov}`, margin, y);
+        y += 4.5;
+        doc.text(`Prazo de Adequação: ${prazo}`, margin, y);
+
+        // BAIXAR PDF AUTOMATICAMENTE
+        doc.save("RDC275_" + dataStr + ".pdf");
+      } else {
+        // Fallback quando biblioteca não estiver presente (offline)
+        const deInput = document.getElementById("relDe");
+        const ateInput = document.getElementById("relAte");
+        if (deInput) deInput.value = dataStr;
+        if (ateInput) ateInput.value = dataStr;
+        processRelatorio();
+        window.print();
+      }
+    }
+
+    // EVENTOS GERAIS
+    function bindEvents() {
+      // Marcar todos SIM
+      document.getElementById("btnMarcarTodosSim").addEventListener("click", () => {
+        const totalActive = getTotalActiveItemsCount();
+        if (!confirm(`Deseja marcar todos os ${totalActive} itens como SIM (Conforme)? Respostas existentes serão substituídas.`)) {
+          return;
+        }
+        const activeData = getActiveChecklistData();
+        activeData.forEach(b => {
+          b.itens.forEach(it => {
+            currentDayData.respostas[it.id] = "SIM";
+            const safeId = it.id.replace(/\./g, '_');
+            const card = document.getElementById(`card_${safeId}`);
+            if (card) {
+              card.classList.remove("state-nao", "state-na");
+              card.classList.add("state-sim");
+              const simBtn = card.querySelector(".btn-sim");
+              const naoBtn = card.querySelector(".btn-nao");
+              const naBtn = card.querySelector(".btn-na");
+              if (simBtn) simBtn.classList.add("active");
+              if (naoBtn) naoBtn.classList.remove("active");
+              if (naBtn) naBtn.classList.remove("active");
+              const ncPanel = document.getElementById(`ncPanel_${safeId}`);
+              if (ncPanel) ncPanel.classList.remove("open");
+            }
+          });
+        });
+        updateProgressUI();
+      });
+
+      // Salvar dia
+      document.getElementById("btnSaveDay").addEventListener("click", saveDayToStorage);
+
+      // Limpar dia
+      document.getElementById("btnClearDay").addEventListener("click", () => {
+        if (confirm(`Tem certeza de que deseja limpar todas as respostas do dia ${formatDateBr(currentDayData.date)}?`)) {
+          localStorage.removeItem(STORAGE_PREFIX + currentDayData.date);
+          loadDayData(currentDayData.date);
+          updateRegistrosBadge();
+        }
+      });
+
+      // Restaurar lista original
+      const restoreBtn = document.getElementById("btnRestaurarOriginal");
+      if (restoreBtn) {
+        restoreBtn.addEventListener("click", () => {
+          if (confirm("Restaurar lista original de 164 itens da RDC 275/2002? Todas as customizações (itens editados, adicionados ou excluídos) serão apagadas.")) {
+            localStorage.removeItem(STORAGE_CUSTOM_KEY);
+            location.reload();
+          }
+        });
+      }
+
+      // Relatório eventos
+      document.getElementById("relDe").addEventListener("change", processRelatorio);
+      document.getElementById("relAte").addEventListener("change", processRelatorio);
+      document.getElementById("btnImprimirPdf").addEventListener("click", () => window.print());
+      document.getElementById("btnExportarCsv").addEventListener("click", exportarCsv);
+
+      updateRegistrosBadge();
+    }
+
+    function updateRegistrosBadge() {
+      const keys = Object.keys(localStorage).filter(k => k.startsWith(STORAGE_PREFIX));
+      document.getElementById("badgeRegCount").textContent = keys.length;
+    }
+
+    // ABA REGISTROS: RENDERIZAÇÃO
+    function renderRegistrosTab() {
+      updateRegistrosBadge();
+      const container = document.getElementById("listaRegistros");
+      container.innerHTML = "";
+
+      const keys = Object.keys(localStorage)
+        .filter(k => k.startsWith(STORAGE_PREFIX))
+        .sort()
+        .reverse();
+
+      if (keys.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:1.5rem; color:#777;">Nenhuma inspeção gravada ainda.</div>`;
+        return;
+      }
+
+      keys.forEach(k => {
+        const itemDate = k.replace(STORAGE_PREFIX, "");
+        try {
+          const data = JSON.parse(localStorage.getItem(k));
+          const activeRegItems = getAllActiveItems();
+          const activeRegIds = new Set(activeRegItems.map(it => it.id));
+
+          let totalRespondidos = 0;
+          let simCount = 0;
+          let naoCount = 0;
+          let naCount = 0;
+
+          Object.entries(data.respostas || {}).forEach(([k, v]) => {
+            if (activeRegIds.has(k)) {
+              totalRespondidos++;
+              if (v === "SIM") simCount++;
+              else if (v === "NAO") naoCount++;
+              else if (v === "NA") naCount++;
+            }
+          });
+
+          const aplicaveis = simCount + naoCount;
+          const pct = aplicaveis > 0 ? Math.round((simCount / aplicaveis) * 100) : 0;
+
+          const card = document.createElement("div");
+          card.className = "record-card";
+          card.innerHTML = `
+            <div style="flex:1;">
+              <div class="record-title">📅 ${formatDateBr(itemDate)}</div>
+              <div class="record-sub">
+                Resp: <strong>${data.responsavel || "Não informado"}</strong> | 
+                ${totalRespondidos} respondidos (${naoCount} não conformes)
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:0.6rem;">
+              <div class="badge-pct">${pct}%</div>
+              <button type="button" class="btn-icon-del" title="Excluir inspeção">🗑️</button>
+            </div>
+          `;
+
+          // Toque para carregar
+          card.querySelector("div[style*='flex:1']").addEventListener("click", () => {
+            document.getElementById("tabBtnPreencher").click();
+            loadDayData(itemDate);
+          });
+
+          // Botão excluir
+          card.querySelector(".btn-icon-del").addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (confirm(`Deseja realmente excluir permanentemente a inspeção de ${formatDateBr(itemDate)}?`)) {
+              localStorage.removeItem(k);
+              renderRegistrosTab();
+              if (currentDayData.date === itemDate) {
+                loadDayData(itemDate);
+              }
+            }
+          });
+
+          container.appendChild(card);
+        } catch(e) {}
+      });
+    }
+
+    // ABA RELATÓRIO: CÁLCULOS E GRÁFICOS
+    function initRelatorioTab() {
+      const deInput = document.getElementById("relDe");
+      const ateInput = document.getElementById("relAte");
+
+      const now = new Date();
+      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split("T")[0];
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split("T")[0];
+
+      if (!deInput.value) deInput.value = firstDay;
+      if (!ateInput.value) ateInput.value = lastDay;
+
+      processRelatorio();
+    }
+
+    function processRelatorio() {
+      const deStr = document.getElementById("relDe").value;
+      const ateStr = document.getElementById("relAte").value;
+
+      const keys = Object.keys(localStorage)
+        .filter(k => k.startsWith(STORAGE_PREFIX))
+        .map(k => k.replace(STORAGE_PREFIX, ""))
+        .filter(d => (!deStr || d >= deStr) && (!ateStr || d <= ateStr))
+        .sort();
+
+      let totalVerificacoes = 0;
+      let totalSim = 0;
+      let totalNao = 0;
+      let totalNa = 0;
+
+      // Por bloco ativo
+      const activeRelData = getActiveChecklistData();
+      const blocoStats = {};
+      activeRelData.forEach(b => {
+        blocoStats[b.blocoId] = { titulo: b.blocoTitulo, sim: 0, nao: 0, na: 0 };
+      });
+
+      const consolidadoNC = [];
+      const obsList = [];
+      let relElaborado = "";
+      let relAprovado = "";
+      let relPrazo = "Imediato para os itens da lista (RDC 275/2002).";
+
+      keys.forEach(d => {
+        try {
+          const reg = JSON.parse(localStorage.getItem(STORAGE_PREFIX + d));
+          if (!reg) return;
+
+          if (reg.elaboradoPor && reg.elaboradoPor.trim()) relElaborado = reg.elaboradoPor.trim();
+          if (reg.aprovadoPor && reg.aprovadoPor.trim()) relAprovado = reg.aprovadoPor.trim();
+          if (reg.prazoAdequacao && reg.prazoAdequacao.trim()) relPrazo = reg.prazoAdequacao.trim();
+
+          if (reg.obsGerais && reg.obsGerais.trim()) {
+            obsList.push(`• [${formatDateBr(d)}] ${reg.obsGerais.trim()}`);
+          }
+
+          activeRelData.forEach(b => {
+            b.itens.forEach(it => {
+              const val = reg.respostas ? reg.respostas[it.id] : null;
+              if (val) {
+                totalVerificacoes++;
+                if (val === "SIM") {
+                  totalSim++;
+                  blocoStats[b.blocoId].sim++;
+                } else if (val === "NAO") {
+                  totalNao++;
+                  blocoStats[b.blocoId].nao++;
+
+                  const itemNc = reg.ncData ? reg.ncData[it.id] : null;
+                  consolidadoNC.push({
+                    data: d,
+                    bloco: b.blocoTitulo,
+                    itemId: it.codigo || it.id,
+                    rawId: it.id,
+                    itemText: it.text,
+                    desc: (itemNc && itemNc.desc) || "Não conformidade apontada.",
+                    acao: (itemNc && itemNc.acao) || "Providenciar adequação.",
+                    resp: (itemNc && itemNc.resp) || reg.responsavel || "-",
+                    prazo: (itemNc && itemNc.prazo) || "-",
+                    foto: (itemNc && itemNc.fotoBase64) || ""
+                  });
+                } else if (val === "NA") {
+                  totalNa++;
+                  blocoStats[b.blocoId].na++;
+                }
+              }
+            });
+          });
+        } catch(e) {}
+      });
+
+      const aplicaveis = totalSim + totalNao;
+      const taxaGeral = aplicaveis > 0 ? Math.round((totalSim / aplicaveis) * 100) : 0;
+
+      // KPIs
+      document.getElementById("kpiDias").textContent = keys.length;
+      document.getElementById("kpiTotalItens").textContent = totalVerificacoes;
+      document.getElementById("kpiConformes").textContent = totalSim;
+      document.getElementById("kpiNaoConformes").textContent = totalNao;
+      document.getElementById("kpiNA").textContent = totalNa;
+      document.getElementById("kpiTaxa").textContent = `${taxaGeral}%`;
+
+      // Classificação RDC 275
+      const classifCard = document.getElementById("classificacaoCard");
+      const classifTxt = document.getElementById("classifTexto");
+      classifCard.classList.remove("grupo1", "grupo2", "grupo3");
+
+      if (keys.length === 0) {
+        classifCard.classList.add("grupo2");
+        classifTxt.textContent = "Nenhum dado registrado para o período selecionado.";
+      } else if (taxaGeral >= 76) {
+        classifCard.classList.add("grupo1");
+        classifTxt.textContent = `GRUPO 1 — ${taxaGeral}% de Atendimento (Classificação Excelente: 76 a 100%)`;
+      } else if (taxaGeral >= 51) {
+        classifCard.classList.add("grupo2");
+        classifTxt.textContent = `GRUPO 2 — ${taxaGeral}% de Atendimento (Classificação Regular: 51 a 75%)`;
+      } else {
+        classifCard.classList.add("grupo3");
+        classifTxt.textContent = `GRUPO 3 — ${taxaGeral}% de Atendimento (Classificação Crítica: 0 a 50%)`;
+      }
+
+      // Barras por bloco
+      const barrasContainer = document.getElementById("barrasPorBloco");
+      barrasContainer.innerHTML = "";
+      Object.keys(blocoStats).forEach(bid => {
+        const b = blocoStats[bid];
+        const ap = b.sim + b.nao;
+        const pct = ap > 0 ? Math.round((b.sim / ap) * 100) : 0;
+
+        const row = document.createElement("div");
+        row.className = "block-bar-row";
+        row.innerHTML = `
+          <div class="block-bar-label">
+            <span>${b.titulo}</span>
+            <span><strong>${pct}%</strong> (${b.sim} conformes / ${b.nao} NC)</span>
+          </div>
+          <div class="block-bar-track">
+            <div class="block-bar-fill" style="width: ${pct}%;"></div>
+          </div>
+        `;
+        barrasContainer.appendChild(row);
+      });
+
+      // Tabela de NC
+      const corpoTabela = document.getElementById("corpoTabelaNC");
+      corpoTabela.innerHTML = "";
+
+      if (consolidadoNC.length === 0) {
+        corpoTabela.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center; padding:1.25rem; color:#666;">
+              Nenhuma não conformidade registrada no período selecionado!
+            </td>
+          </tr>
+        `;
+      } else {
+        consolidadoNC.forEach(nc => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><strong>${formatDateBr(nc.data)}</strong></td>
+            <td><span class="item-code" style="font-size:0.75rem;">${nc.itemId}</span></td>
+            <td style="font-size:0.8rem; line-height:1.25;">${nc.itemText}</td>
+            <td style="color:#a73500; font-weight:600;">${nc.desc}</td>
+            <td>${nc.acao}</td>
+            <td><strong>${nc.resp}</strong><br><small style="color:#666;">Prazo: ${nc.prazo ? formatDateBr(nc.prazo) : '-'}</small></td>
+            <td style="text-align:center;">
+              ${nc.foto ? `<img src="${nc.foto}" class="nc-photo-print" style="width:40px; height:40px; object-fit:cover; border-radius:4px; border:1px solid #b37e00; cursor:pointer;" onclick="mostrarFotoModal('${nc.foto}')">` : '<span style="color:#999;">-</span>'}
+            </td>
+          `;
+          corpoTabela.appendChild(tr);
+        });
+      }
+
+      // Observações consolidadas
+      const obsContainer = document.getElementById("relatorioObsConsolidadas");
+      if (obsList.length > 0) {
+        obsContainer.textContent = obsList.join("\n\n");
+      } else {
+        obsContainer.textContent = "Nenhuma consideração adicional registrada no período selecionado.";
+      }
+
+      // Rodapé do relatório com dados mais recentes do período
+      const relValElaboradoEl = document.getElementById("relValElaborado");
+      const relValAprovadoEl = document.getElementById("relValAprovado");
+      const relValPrazoEl = document.getElementById("relValPrazo");
+      if (relValElaboradoEl) relValElaboradoEl.textContent = relElaborado || "________________________________";
+      if (relValAprovadoEl) relValAprovadoEl.textContent = relAprovado || "________________________________";
+      if (relValPrazoEl) relValPrazoEl.textContent = relPrazo || "Imediato para os itens da lista (RDC 275/2002).";
+    }
+
+    // EXIBIR FOTO EM TELA CHEIA
+    window.mostrarFotoModal = function(src) {
+      const modal = document.getElementById("imgModal");
+      const modalImg = document.getElementById("imgModalSrc");
+      modalImg.src = src;
+      modal.classList.add("open");
+    };
+
+    // EXPORTAR CSV
+    function exportarCsv() {
+      const deStr = document.getElementById("relDe").value;
+      const ateStr = document.getElementById("relAte").value;
+
+      const keys = Object.keys(localStorage)
+        .filter(k => k.startsWith(STORAGE_PREFIX))
+        .map(k => k.replace(STORAGE_PREFIX, ""))
+        .filter(d => (!deStr || d >= deStr) && (!ateStr || d <= ateStr))
+        .sort();
+
+      if (keys.length === 0) {
+        alert("Nenhum registro para exportar no período selecionado.");
+        return;
+      }
+
+      const rows = [];
+      rows.push(["Data", "Responsavel", "Elaborado por", "Aprovado por", "Bloco", "Item_Codigo", "Requisito_RDC275", "Status", "Descricao_NC", "Acao_Corretiva", "Responsavel_NC", "Prazo_NC", "Foto_Anexada"]);
+
+      keys.forEach(d => {
+        try {
+          const reg = JSON.parse(localStorage.getItem(STORAGE_PREFIX + d));
+          if (!reg) return;
+
+          const elab = reg.elaboradoPor || "";
+          const aprov = reg.aprovadoPor || "";
+
+          const activeCsvData = getActiveChecklistData();
+          activeCsvData.forEach(b => {
+            b.itens.forEach(it => {
+              const st = reg.respostas ? reg.respostas[it.id] : "PENDENTE";
+              const nc = reg.ncData ? reg.ncData[it.id] : null;
+
+              const desc = (nc && nc.desc) ? nc.desc.replace(/(\r\n|\n|\r)/gm, " ") : "";
+              const acao = (nc && nc.acao) ? nc.acao.replace(/(\r\n|\n|\r)/gm, " ") : "";
+              const resp = (nc && nc.resp) ? nc.resp : "";
+              const prazo = (nc && nc.prazo) ? formatDateBr(nc.prazo) : "";
+              const temFoto = (nc && nc.fotoBase64) ? "Sim" : "Não";
+
+              rows.push([
+                formatDateBr(d),
+                reg.responsavel || "",
+                elab,
+                aprov,
+                b.blocoTitulo,
+                it.codigo || it.id,
+                it.text.replace(/(\r\n|\n|\r)/gm, " "),
+                st,
+                desc,
+                acao,
+                resp,
+                prazo,
+                temFoto
+              ]);
+            });
+          });
+        } catch(e) {}
+      });
+
+      // Gerar CSV com BOM para compatibilidade com Microsoft Excel em pt-BR
+      const csvContent = "\uFEFF" + rows.map(r => r.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(";")).join("\r\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `RDC275_Checklist_BPF_${deStr}_a_${ateStr}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+<script>
+/* Skip artifact shell — fixed helpers served beside every artifact. */
+(function () {
+  "use strict";
+
+  var fmt = {
+    num: function (v, opts) { return new Intl.NumberFormat("pt-BR", opts || {}).format(v); },
+    brl: function (v) { return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v); },
+    pct: function (v) { return new Intl.NumberFormat("pt-BR", { style: "percent", maximumFractionDigits: 1 }).format(v); }
+  };
+
+  // axisFmt keeps axis tick labels short (compact notation) so long values
+  // (e.g. full BRL amounts) never clip against the plot edge.
+  function axisFmt(v) {
+    return fmt.num(v, { notation: "compact", maximumFractionDigits: 1 });
+  }
+
+  // format accepts a function OR one of the fmt names ("num" | "brl" | "pct").
+  function coerceFormat(spec) {
+    if (typeof spec === "function") return spec;
+    if (typeof spec === "string" && fmt[spec]) return fmt[spec];
+    return function (v) { return fmt.num(v); };
+  }
+
+  function accent() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#2563eb";
+  }
+  function mutedColor() {
+    return getComputedStyle(document.documentElement).getPropertyValue("--text-muted").trim() || "#5b6472";
+  }
+  function svgEl(tag, attrs) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    return el;
+  }
+  function frame(el, w, h) {
+    var svg = svgEl("svg", { viewBox: "0 0 " + w + " " + h, role: "img" });
+    el.innerHTML = "";
+    el.appendChild(svg);
+    return svg;
+  }
+
+  // maxOf guards the axis scale: empty values would give -Infinity (truthy,
+  // so "|| 1" can't catch it) and a non-positive max would flip the chart.
+  function maxOf(values) {
+    var m = values.length ? Math.max.apply(null, values) : 0;
+    return m > 0 ? m : 1;
+  }
+
+  // bar(el, {labels:[], values:[], color?, format?}) — vertical bar chart.
+  function bar(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 12, plotH = H - padT - padB;
+    var step = plotW / n, bw = Math.min(step * 0.62, 64);
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 12, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    cfg.values.forEach(function (v, i) {
+      var bh = Math.max(0, (v / max) * plotH);
+      var x = padL + i * step + (step - bw) / 2;
+      var y = padT + plotH - bh;
+      var r = svgEl("rect", { x: x, y: y, width: bw, height: bh, rx: 4, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(v);
+      r.appendChild(t);
+      svg.appendChild(r);
+      var tx = svgEl("text", { x: x + bw / 2, y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // line(el, {labels:[], values:[], color?, format?}) — single-series line.
+  function line(el, cfg) {
+    var W = 640, H = 280, padL = 46, padB = 30, padT = 12;
+    var svg = frame(el, W, H);
+    var max = maxOf(cfg.values);
+    var n = cfg.values.length;
+    var plotW = W - padL - 16, plotH = H - padT - padB;
+    var color = cfg.color || accent();
+    var f = coerceFormat(cfg.format);
+    for (var g = 0; g <= 4; g++) {
+      var gy = padT + plotH - (plotH * g) / 4;
+      svg.appendChild(svgEl("line", { x1: padL, y1: gy, x2: W - 16, y2: gy, stroke: "currentColor", "stroke-opacity": 0.08 }));
+      var lbl = svgEl("text", { x: padL - 8, y: gy + 4, "text-anchor": "end", "font-size": 10, fill: mutedColor() });
+      lbl.textContent = axisFmt((max * g) / 4);
+      svg.appendChild(lbl);
+    }
+    var pts = cfg.values.map(function (v, i) {
+      var x = padL + (n === 1 ? plotW / 2 : (plotW * i) / (n - 1));
+      var y = padT + plotH - (v / max) * plotH;
+      return [x, y];
+    });
+    var d = pts.map(function (p, i) { return (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1); }).join(" ");
+    svg.appendChild(svgEl("path", { d: d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }));
+    pts.forEach(function (p, i) {
+      var c = svgEl("circle", { cx: p[0], cy: p[1], r: 3.5, fill: color });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + f(cfg.values[i]);
+      c.appendChild(t);
+      svg.appendChild(c);
+      var tx = svgEl("text", { x: p[0], y: H - 10, "text-anchor": "middle", "font-size": 11, fill: mutedColor() });
+      tx.textContent = cfg.labels[i];
+      svg.appendChild(tx);
+    });
+  }
+
+  // donut(el, {labels:[], values:[], colors?}) — donut with center total.
+  function donut(el, cfg) {
+    var W = 320, H = 280, cx = W / 2, cy = H / 2, R = 92, r = 58;
+    var svg = frame(el, W, H);
+    var total = cfg.values.reduce(function (a, b) { return a + b; }, 0) || 1;
+    var palette = cfg.colors || [accent(), "#1baf7a", "#eda100", "#e34948", "#4a3aa7", "#e87ba4"];
+    var a0 = -Math.PI / 2;
+    cfg.values.forEach(function (v, i) {
+      var a1 = a0 + (v / total) * Math.PI * 2;
+      var large = a1 - a0 > Math.PI ? 1 : 0;
+      var p = ["M", cx + R * Math.cos(a0), cy + R * Math.sin(a0),
+        "A", R, R, 0, large, 1, cx + R * Math.cos(a1), cy + R * Math.sin(a1),
+        "L", cx + r * Math.cos(a1), cy + r * Math.sin(a1),
+        "A", r, r, 0, large, 0, cx + r * Math.cos(a0), cy + r * Math.sin(a0), "Z"].join(" ");
+      var path = svgEl("path", { d: p, fill: palette[i % palette.length] });
+      var t = svgEl("title", {});
+      t.textContent = cfg.labels[i] + ": " + fmt.num(v) + " (" + fmt.pct(v / total) + ")";
+      path.appendChild(t);
+      svg.appendChild(path);
+      a0 = a1;
+    });
+    var center = svgEl("text", { x: cx, y: cy + 5, "text-anchor": "middle", "font-size": 20, "font-weight": 650, fill: "currentColor" });
+    center.textContent = fmt.num(total);
+    svg.appendChild(center);
+  }
+
+  window.skipShell = { fmt: fmt };
+  window.skipChart = { bar: bar, line: line, donut: donut };
+})();
+
+</script>
+</body>
+</html>
